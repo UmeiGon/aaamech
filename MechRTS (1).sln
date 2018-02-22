@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MechRTS (1)", "MechRTS (1).csproj", "{069B3FB2-26E0-417C-7C59-3C99942459D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MechRTS (1).Plugins", "MechRTS (1).Plugins.csproj", "{AC691781-B02F-BE21-F195-D6014156504B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MechRTS (1).Editor", "MechRTS (1).Editor.csproj", "{BF3DE073-DFEF-F26F-1B4B-71F33EF569CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MechRTS (1).Editor.Plugins", "MechRTS (1).Editor.Plugins.csproj", "{93CFA878-0172-03E8-8524-734CCEA7CA66}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{069B3FB2-26E0-417C-7C59-3C99942459D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{069B3FB2-26E0-417C-7C59-3C99942459D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{069B3FB2-26E0-417C-7C59-3C99942459D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{069B3FB2-26E0-417C-7C59-3C99942459D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC691781-B02F-BE21-F195-D6014156504B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC691781-B02F-BE21-F195-D6014156504B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC691781-B02F-BE21-F195-D6014156504B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC691781-B02F-BE21-F195-D6014156504B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF3DE073-DFEF-F26F-1B4B-71F33EF569CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF3DE073-DFEF-F26F-1B4B-71F33EF569CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF3DE073-DFEF-F26F-1B4B-71F33EF569CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF3DE073-DFEF-F26F-1B4B-71F33EF569CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93CFA878-0172-03E8-8524-734CCEA7CA66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93CFA878-0172-03E8-8524-734CCEA7CA66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93CFA878-0172-03E8-8524-734CCEA7CA66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93CFA878-0172-03E8-8524-734CCEA7CA66}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
