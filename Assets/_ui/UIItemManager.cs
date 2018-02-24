@@ -8,13 +8,14 @@ public class UIItemManager : MonoBehaviour
     
     private void Awake()
     {
-        pItemMane= GameObject.Find("Parent").GetComponentInChildren<PlayerItemManager>();
+        pItemMane=PlayerItemManager.GetInstance();
         //アイテム個数が変更された時にデリゲートでtextの関数を呼んで、textも更新。
         var uis=GetComponentsInChildren<UIItemText>();
         foreach (var i in uis)
         {
             
             pItemMane.itemDataTable[(int)i.ID].valueChanged += i.TextReload;
+            pItemMane.itemDataTable[(int)i.ID].Value=pItemMane.itemDataTable[(int)i.ID].Value;
         }
     }
 }

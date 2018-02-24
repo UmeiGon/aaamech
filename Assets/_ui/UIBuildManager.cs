@@ -10,7 +10,7 @@ public class UIBuildManager : MonoBehaviour
     private void Start()
     {
         var p = GameObject.Find("Parent");
-        p.GetComponentInChildren<PlayerItemManager>().changeTrigger += BuildButtonReload;
+        PlayerItemManager.GetInstance().changeTrigger += BuildButtonReload;
         buildManager = p.GetComponentInChildren<BuildManager>();
         p.GetComponentsInChildren(buildButtons);
         BuildButtonReload();

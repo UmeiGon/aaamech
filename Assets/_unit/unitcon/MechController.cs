@@ -7,6 +7,7 @@ public class MechController : MonoBehaviour
 {
 
     NavMeshAgent agent;
+    MechAIController ai=null;
     public Unit targetUnit;
     public MechUnit myUnit;
     UnitLists unitList;
@@ -69,8 +70,17 @@ public class MechController : MonoBehaviour
     }
     IEnumerator MechMove()
     {
+        Command nowCommand=ai.firstCommand;
         while (true)
         {
+            foreach(var i in nowCommand.edges)
+            {
+                if (i.checker.Check()&& i.next != null)
+                {
+                    nowCommand = i.next;
+                    break;
+                }
+            }
             //アイテム収集処理（仮）
             dropItemMane.GetDropItems(transform.position);
 

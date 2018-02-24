@@ -6,7 +6,7 @@ public class DropItemManager : MonoBehaviour
 {
     public List<DropItem> dropItemList = new List<DropItem>();
 
-    public void GetDropItems(Vector3 _pos, float getDistance = 30.0f)
+    public void GetDropItems(Vector3 _pos, float getDistance = 60.0f)
     {
         foreach (var i in dropItemList)
         {

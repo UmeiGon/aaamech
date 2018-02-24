@@ -17,7 +17,7 @@ public class Unit : MonoBehaviour
     public Army armyTag;
     public float Helth
     {
-        set { if (value > maxHelth) maxHelth = value; helth = value; }
+        set { if (value > maxHelth) maxHelth = value; helth = value;}
         get { return helth; }
     }
     public float attack = 1.0f;

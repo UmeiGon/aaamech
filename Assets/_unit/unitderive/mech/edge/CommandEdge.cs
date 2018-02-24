@@ -6,6 +6,7 @@ public class CommandEdge  {
     public Transform holder;
     public Command pre=null;
     public Command next=null;
+    public EdgeChecker checker=null;
     public virtual bool Check() { return false; }
     //追加に成功した場合真を返す
     public bool AddPreNode(Command c_node)

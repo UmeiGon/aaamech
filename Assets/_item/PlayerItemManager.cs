@@ -2,13 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 public enum ItemID { Stone, Wood }
-public class PlayerItemManager : MonoBehaviour {
-   
+public class PlayerItemManager
+{
+
     public Dictionary<int, ItemData> itemDataTable;
     public delegate void ItemChangeTrigger();
-    public ItemChangeTrigger changeTrigger=null;
-	// Use this for initialization
-	void Awake () {
+    public ItemChangeTrigger changeTrigger = null;
+    static PlayerItemManager instance = null;
+    public static PlayerItemManager GetInstance()
+    {
+        if (instance == null)
+        {
+            instance = new PlayerItemManager();
+        }
+        return instance;
+    }
+    PlayerItemManager()
+    {
         itemDataTable = new Dictionary<int, ItemData>
         {
             { (int)ItemID.Stone, new ItemData() },
@@ -19,16 +29,14 @@ public class PlayerItemManager : MonoBehaviour {
         {
             i.Value.valueChanged += ItemChangeTriggerF;
         }
-    }
-    private void Start()
-    {
         foreach (var i in itemDataTable)
         {
             i.Value.valueChanged(i.Value.Value);
         }
     }
+
     //貰ったitemlistを
-    public void UsingItem(Dictionary<int,int> using_items)
+    public void UsingItem(Dictionary<int, int> using_items)
     {
         foreach (var i in using_items)
         {
@@ -38,10 +46,6 @@ public class PlayerItemManager : MonoBehaviour {
     //なんらかのアイテムの数が変更されるたび呼ばれる。
     void ItemChangeTriggerF(int i)
     {
-        if(changeTrigger!=null)changeTrigger();
+        if (changeTrigger != null) changeTrigger();
     }
-	// Update is called once per frame
-	void Update () {
-       
-	}
 }

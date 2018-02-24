@@ -46,7 +46,7 @@ public class BuildManager : MonoBehaviour
     PlayerItemManager pItemManager;
     private void Start()
     {
-        pItemManager = GameObject.Find("Parent").GetComponentInChildren<PlayerItemManager>();
+        pItemManager = PlayerItemManager.GetInstance();
         var buildDataList = new List<BuildData>
         {
             new BuildData(BuildID.NONE, "null", null),

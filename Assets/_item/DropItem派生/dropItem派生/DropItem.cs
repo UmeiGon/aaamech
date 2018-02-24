@@ -35,7 +35,7 @@ public class DropItem : MonoBehaviour {
     }
     public  void Picked() {
         if (pickUpDelay > 0)return;
-        pare.GetComponentInChildren<PlayerItemManager>().itemDataTable[(int)id].Value += dropValue;
+        PlayerItemManager.GetInstance().itemDataTable[(int)id].Value += dropValue;
         IsLife = false;
     }
 }
