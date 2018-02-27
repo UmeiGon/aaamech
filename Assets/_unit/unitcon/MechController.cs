@@ -7,9 +7,10 @@ public class MechController : MonoBehaviour
 {
 
     public NavMeshAgent agent;
-    public MechAITree aiTree=null;
+    MechAITree aiTree=null;
     public Unit targetUnit;
     public MechUnit myUnit;
+    Command nowCommand;
     UnitLists unitList;
     DropItemManager dropItemMane;
     NavMeshObstacle navObs;
@@ -31,6 +32,11 @@ public class MechController : MonoBehaviour
         var pare = GameObject.Find("Parent");
         dropItemMane = pare.GetComponentInChildren<DropItemManager>();
         unitList = pare.GetComponentInChildren<UnitLists>();
+        if (aiTree != null)
+        {
+            nowCommand = aiTree.firstCommand;
+            if(nowCommand.program!=null)nowCommand.program.ChangeTrigger();
+        }
         StartCoroutine(MechMove());
     }
     public void SetTarget(Unit _unit)
@@ -73,21 +79,47 @@ public class MechController : MonoBehaviour
         targetUnit = null;
         mode = (Mode)_mode;
     }
+    public void SetAITree(MechAITree _tree)
+    {
+        aiTree = _tree;
+        foreach (var i in aiTree.commandList)
+        {
+            if(i.program!=null)i.program.mechCon = this;
+        }
+    }
+    void AIUpdate()
+    {
+        bool changed=false;
+        foreach (var i in nowCommand.edges)
+        {
+            //preが自分でnextがちゃんとある場合
+            if (i.pre== nowCommand && i.next != null &&i.nextChecker!=null &&i.nextChecker.Check())
+            {
+                nowCommand = i.next;
+                changed = true;
+                break;
+            }
+            if (i.next == nowCommand && i.pre != null && i.preChecker!=null && i.preChecker.Check())
+            {
+                nowCommand = i.pre;
+                changed = true; 
+                break;
+            }
+        }
+        if (changed)
+        {
+            targetUnit = null;
+            if(nowCommand.program!=null)nowCommand.program.ChangeTrigger();
+        }
+        if (nowCommand.program != null) nowCommand.program.Move();
+    }
     IEnumerator MechMove()
     {
-        //Command nowCommand=aiTree.firstCommand;
+
+
         while (true)
         {
-            //foreach (var i in nowCommand.edges)
-            //{
-            //    if (i.checker.Check() && i.next != null)
-            //    {
-            //        nowCommand = i.next;
-            //        nowCommand.program.ChangeTrigger();
-            //        break;
-            //    }
-            //}
-            //nowCommand.program.Move();
+            AIUpdate();
             //アイテム収集処理（仮）
             dropItemMane.GetDropItems(transform.position);
 

@@ -31,11 +31,11 @@ public class NodeDataBase
         }
         return inst;
     }
-    public List<NodeData> NodeDataList;
+    public List<NodeData> nodeDataList;
     public int FindTypeNumber(System.Type _type)
     {
         int n = 0;
-        foreach (var i in NodeDataList)
+        foreach (var i in nodeDataList)
         {
             if (i.type==_type)
             {
@@ -47,7 +47,7 @@ public class NodeDataBase
     }
     NodeDataBase()
     {
-        NodeDataList = new List<NodeData>()
+        nodeDataList = new List<NodeData>()
         {
             new NodeData("無し",null),
             new NodeData("敵を探して攻撃",typeof(AttackProgram)),

@@ -26,7 +26,6 @@ public class MaterialCheckerInput : CheckerInput {
     }
     private void OnEnable()
     {
-        base.OnEnable();
         if (ide.SelectChecker is MaterialChecker)
         {
             checkerInstance = ide.SelectChecker as MaterialChecker;

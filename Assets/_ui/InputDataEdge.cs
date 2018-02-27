@@ -28,6 +28,7 @@ public class InputDataEdge : MonoBehaviour
         }
         get
         {
+            if (comaMane.SelectEdge == null) return null;
             if (selectIsNext)
             {
                 return comaMane.SelectEdge.commandEdge.nextChecker;
@@ -79,11 +80,7 @@ public class InputDataEdge : MonoBehaviour
     void EdgeTypeChanged(int num)
     {
         //nullか同じcheckertypeじゃなかったら変更。
-        if (SelectChecker == null)
-        {
-            SelectChecker = EdgeDataBase.GetInstance().edgeDataList[num].GetCheckerInstance();
-        }
-        else if (EdgeDataBase.GetInstance().edgeDataList[num].type != SelectChecker.GetType())
+        if (SelectChecker == null|| EdgeDataBase.GetInstance().edgeDataList[num].type != SelectChecker.GetType())
         {
             SelectChecker = EdgeDataBase.GetInstance().edgeDataList[num].GetCheckerInstance();
         }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class UICommandManager : MonoBehaviour
 {
 
@@ -17,6 +17,11 @@ public class UICommandManager : MonoBehaviour
     UnityEngine.UI.Button deleteEdgeButton;
     [SerializeField]
     UnityEngine.UI.Button deleteNodeButton;
+    [SerializeField]
+    Color defaultNodeColor;
+    [SerializeField]
+    Color firstNodeColor;
+    MechAITree nowTree=null;
     //実態こっちは使用してはいけない
     EdgeOnUI selectEdgeReal;
     NodeOnUI selectNodeReal;
@@ -29,6 +34,7 @@ public class UICommandManager : MonoBehaviour
         createEdgeButton.interactable = false;
         deleteEdgeButton.interactable = false;
         deleteNodeButton.interactable = false;
+        nowTree = new MechAITree();
     }
     public EdgeOnUI SelectEdge
     {
@@ -78,6 +84,7 @@ public class UICommandManager : MonoBehaviour
     {
         if (SelectNode != null)
         {
+            nowTree.commandList.Remove(SelectNode.commandNode);
             SelectNode.DeleteNode();
             Destroy(SelectNode.gameObject);
             SelectNode = null;
@@ -85,7 +92,7 @@ public class UICommandManager : MonoBehaviour
     }
     public void CreateCommandNode(Vector3 pos)
     {
-
+        
         var c = Instantiate(commandNodePre, new Vector3(0, 0, 0), new Quaternion(), commandBackPanel.transform);
         c.transform.position = pos;
         c.transform.SetAsLastSibling();
@@ -95,12 +102,23 @@ public class UICommandManager : MonoBehaviour
         nodeui.endLimitPosition = commandBackPanel.GetComponent<RectTransform>().sizeDelta;
         nodeui.startLimitPosition.y *= -1;
         nodeui.endLimitPosition.y *= -1;
-
+        nowTree.commandList.Add(nodeui.commandNode);
+        //firstがまだ設定されて無かったらfirstに
+        if (nowTree.firstCommand == null)
+        {
+            nowTree.firstCommand=nodeui.commandNode;
+            nodeui.GetComponent<Image>().color = firstNodeColor;
+        }
+        else
+        {
+            nodeui.GetComponent<Image>().color = defaultNodeColor;
+        }
 
     }
-    public void PopUpCreateCommmandPanel(Vector3 _pos)
+    public void SaveMechAI()
     {
-
+        
+        //gameObject.SetActive(false);
     }
     void SelectedEdgeTrigger()
     {
@@ -139,6 +157,7 @@ public class UICommandManager : MonoBehaviour
     {
         if (SelectEdge)
         {
+            nowTree.edgeList.Remove(SelectEdge.commandEdge);
             SelectEdge.DeleteEdge();
             Destroy(SelectEdge.gameObject);
             SelectEdge = null;
@@ -155,6 +174,8 @@ public class UICommandManager : MonoBehaviour
             SelectEdge.transform.localPosition = Vector3.zero;
             SelectEdge.commandEdge.AddPreNode(SelectNode.commandNode);
             SelectEdge.transform.SetAsFirstSibling();
+            //treeに追加
+            nowTree.edgeList.Add(SelectEdge.commandEdge);
         }
     }
 

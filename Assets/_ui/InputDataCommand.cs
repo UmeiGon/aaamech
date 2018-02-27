@@ -22,7 +22,7 @@ public class InputDataCommand : MonoBehaviour {
     private void Start()
     {
         List<string> slist = new List<string>();
-        foreach (var i in NodeDataBase.GetInstance().NodeDataList)
+        foreach (var i in NodeDataBase.GetInstance().nodeDataList)
         {
             slist.Add(i.nodeName);
         }
@@ -43,7 +43,12 @@ public class InputDataCommand : MonoBehaviour {
     //ノードタイプが変更されるたびに新しいインスタンスを生成
     void NodeTypeChanged(int _num)
     {
-        SelectProgram = NodeDataBase.GetInstance().NodeDataList[_num].GetProgramInstance();
+        if (SelectProgram == null|| NodeDataBase.GetInstance().nodeDataList[_num].type != SelectProgram.GetType())
+        {
+            SelectProgram = NodeDataBase.GetInstance().nodeDataList[_num].GetProgramInstance();
+        }
+ 
+        
         SetLayOut();
     }
     void ApplyCommandType()

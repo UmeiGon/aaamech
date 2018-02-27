@@ -6,7 +6,7 @@ public class AttackProgram : CommandProgram
 {
     public override void ChangeTrigger()
     {
-        mech.mechCon.mode = MechController.Mode.Attack;
+        mechCon.mode = MechController.Mode.Attack;
     }
     public override void Move()
     {

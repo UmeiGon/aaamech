@@ -108,6 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8676119ececa7a543b59cc1a8e668901, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nodeNameText: {fileID: 114252625855558994}
   startLimitPosition: {x: 0, y: 0, z: 0}
   endLimitPosition: {x: 0, y: 0, z: 0}
   cManager: {fileID: 0}

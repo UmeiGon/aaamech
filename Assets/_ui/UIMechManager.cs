@@ -154,7 +154,7 @@ public class UIMechManager : MonoBehaviour
     {
         var m =Instantiate(mechPre);
         m.transform.position = createPos.position;
-        m.GetComponent<MechController>().aiTree = mechAI;
+        m.GetComponent<MechController>().SetAITree(mechAI);
     }
     void UnitIntoSelectMechsTarget(Unit _unit)
     {

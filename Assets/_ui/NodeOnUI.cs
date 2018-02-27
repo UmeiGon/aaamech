@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 public class NodeOnUI :MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHandler,IPointerDownHandler{
     Vector3 offSet;
+    [SerializeField]
+    UnityEngine.UI.Text nodeNameText;
     public Vector3 startLimitPosition;
     public Vector3 endLimitPosition;
     public UICommandManager cManager;
@@ -12,10 +14,30 @@ public class NodeOnUI :MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHan
     {
         commandNode.DeleteMe();
     }
+    void NameApplyText(string _name)
+    {
+        nodeNameText.text = _name;
+    }
     private void Start()
     {
         commandNode.holder = transform;
+
     }
+    //IEnumerator TextApply()
+    //{
+    //    while (true )
+    //    {
+    //        if (commandNode.program != null)
+    //        {
+    //            nodeNameText.text = ""+NodeDataBase.GetInstance().nodeDataList[NodeDataBase.GetInstance().FindTypeNumber(commandNode.program.GetType())].nodeName;
+    //        }
+    //        else
+    //        {
+    //            nodeNameText.text = "";
+    //        }
+    //        yield return null;
+    //    }
+    //}
     public void SelectTrigger()
     {
         GetComponent<Animator>().SetBool("selectFlag", true);
