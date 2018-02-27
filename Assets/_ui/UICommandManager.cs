@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UICommandManager : MonoBehaviour
 {
-  
+
     [SerializeField]
     GameObject commandBackPanel;
     [SerializeField]
@@ -12,12 +12,29 @@ public class UICommandManager : MonoBehaviour
     [SerializeField]
     GameObject commandEdgePre;
     [SerializeField]
-    GameObject createEdgePopPanel;
+    UnityEngine.UI.Button createEdgeButton;
     [SerializeField]
-    GameObject deleteEdgePopPanel;
+    UnityEngine.UI.Button deleteEdgeButton;
+    [SerializeField]
+    UnityEngine.UI.Button deleteNodeButton;
+    //実態こっちは使用してはいけない
     EdgeOnUI selectEdgeReal;
     NodeOnUI selectNodeReal;
-    EdgeOnUI SelectEdge { get { return selectEdgeReal; }set {
+    public delegate void SelectEdgeChanged();
+    public SelectEdgeChanged edgeChanged;
+    public delegate void SelectCommandChanged();
+    public SelectCommandChanged commandChanged;
+    private void Start()
+    {
+        createEdgeButton.interactable = false;
+        deleteEdgeButton.interactable = false;
+        deleteNodeButton.interactable = false;
+    }
+    public EdgeOnUI SelectEdge
+    {
+        get { return selectEdgeReal; }
+        set
+        {
             if (selectEdgeReal != null)
             {
                 selectEdgeReal.NonSelectTrigger();
@@ -26,10 +43,20 @@ public class UICommandManager : MonoBehaviour
             if (selectEdgeReal != null)
             {
                 selectEdgeReal.SelectTrigger();
+                SelectedEdgeTrigger();
             }
+            else
+            {
+                NotSelectedEdgeTrigger();
+            }
+            if (edgeChanged != null) edgeChanged();
         }
     }
-    NodeOnUI SelectNode { get {return selectNodeReal; }set {
+    public NodeOnUI SelectNode
+    {
+        get { return selectNodeReal; }
+        set
+        {
             if (selectNodeReal != null)
             {
                 selectNodeReal.NonSelectTrigger();
@@ -38,61 +65,97 @@ public class UICommandManager : MonoBehaviour
             if (selectNodeReal != null)
             {
                 selectNodeReal.SelectTrigger();
+                SelectedNodeTrigger();
             }
+            else
+            {
+                NotSelectedNodeTrigger();
+            }
+            if (commandChanged != null) commandChanged();
         }
     }
-    public void CreateCommandNode()
+    public void DeleteCommandNode()
+    {
+        if (SelectNode != null)
+        {
+            SelectNode.DeleteNode();
+            Destroy(SelectNode.gameObject);
+            SelectNode = null;
+        }
+    }
+    public void CreateCommandNode(Vector3 pos)
     {
 
         var c = Instantiate(commandNodePre, new Vector3(0, 0, 0), new Quaternion(), commandBackPanel.transform);
-        c.transform.localPosition = new Vector3(50, -50, 0);
+        c.transform.position = pos;
         c.transform.SetAsLastSibling();
-        c.GetComponent<NodeOnUI>().cManager = this;
+        var nodeui = c.GetComponent<NodeOnUI>();
+        nodeui.cManager = this;
+        nodeui.startLimitPosition = new Vector3(0, 0, 0);
+        nodeui.endLimitPosition = commandBackPanel.GetComponent<RectTransform>().sizeDelta;
+        nodeui.startLimitPosition.y *= -1;
+        nodeui.endLimitPosition.y *= -1;
+
 
     }
-    public void DeleteEdgePopUp(EdgeOnUI _edge)
+    public void PopUpCreateCommmandPanel(Vector3 _pos)
     {
-        SelectEdge = _edge;
-        deleteEdgePopPanel.SetActive(true);
-    } 
 
+    }
+    void SelectedEdgeTrigger()
+    {
+        deleteEdgeButton.interactable = true;
+    }
+    void NotSelectedEdgeTrigger()
+    {
+        deleteEdgeButton.interactable = false;
+    }
+    void SelectedNodeTrigger()
+    {
+        createEdgeButton.interactable = true;
+        deleteNodeButton.interactable = true;
+    }
+    void NotSelectedNodeTrigger()
+    {
+        createEdgeButton.interactable = false;
+        deleteNodeButton.interactable = false;
+    }
     public void NodeRightClick(NodeOnUI _node)
     {
         SelectNode = _node;
-        createEdgePopPanel.SetActive(true);
     }
     public void NodeLeftClick(NodeOnUI _node)
     {
-        //nodeにedgeを付ける
-        if (SelectNode && SelectNode != _node&& SelectEdge)
+        //nodeにselectedgeを付ける
+        if (SelectEdge)
         {
-            if (SelectEdge.commandEdge.AddNextNode(_node.commandNode))
+            if (!SelectEdge.commandEdge.AddNextNode(_node.commandNode))
             {
-                SelectNode = null;
-                SelectEdge = null;
-            }  
+                SelectEdge.commandEdge.AddPreNode(_node.commandNode);
+            }
         }
     }
     public void DeleteCommandEdge()
     {
-        //自分を持ってるノードのedgelistに対してremoveする
-        deleteEdgePopPanel.SetActive(false);
-        SelectEdge.commandEdge.pre.edges.Remove(SelectEdge.commandEdge);
-        SelectEdge.commandEdge.next.edges.Remove(SelectEdge.commandEdge);
-        Destroy(SelectEdge.gameObject);
+        if (SelectEdge)
+        {
+            SelectEdge.DeleteEdge();
+            Destroy(SelectEdge.gameObject);
+            SelectEdge = null;
+        }  
     }
     public void CreateCommandEdge()
     {
 
         if (SelectNode)
         {
-            createEdgePopPanel.SetActive(false); 
-            SelectEdge = Instantiate(commandEdgePre,Vector3.zero,new Quaternion(),commandBackPanel.transform).GetComponent<EdgeOnUI>();
+            //nodeClickedPopPanel.SetActive(false);
+            SelectEdge = Instantiate(commandEdgePre, Vector3.zero, new Quaternion(), commandBackPanel.transform).GetComponent<EdgeOnUI>();
             SelectEdge.cManager = this;
             SelectEdge.transform.localPosition = Vector3.zero;
             SelectEdge.commandEdge.AddPreNode(SelectNode.commandNode);
             SelectEdge.transform.SetAsFirstSibling();
         }
     }
-   
+
 }

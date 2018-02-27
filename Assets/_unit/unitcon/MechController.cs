@@ -6,14 +6,14 @@ using UnityEngine;
 public class MechController : MonoBehaviour
 {
 
-    NavMeshAgent agent;
-    MechAIController ai=null;
+    public NavMeshAgent agent;
+    public MechAITree aiTree=null;
     public Unit targetUnit;
     public MechUnit myUnit;
     UnitLists unitList;
     DropItemManager dropItemMane;
     NavMeshObstacle navObs;
-    [SerializeField] ParticleSystem AttackEffect;
+    public ParticleSystem AttackEffect;
     public enum Mode
     {
         Attack, PickUpItem,Build, Idle
@@ -21,6 +21,7 @@ public class MechController : MonoBehaviour
     public Mode mode;
     public bool attackFlag = false;
     private Vector3 preTargetPos;
+    
     void Start()
     {
         mode = Mode.Idle;
@@ -63,6 +64,10 @@ public class MechController : MonoBehaviour
             agent.SetDestination(targetUnit.transform.position);
         }
     }
+    public void Attack()
+    {
+
+    }
     public void SetMode(int _mode)
     {
         targetUnit = null;
@@ -70,17 +75,19 @@ public class MechController : MonoBehaviour
     }
     IEnumerator MechMove()
     {
-        Command nowCommand=ai.firstCommand;
+        //Command nowCommand=aiTree.firstCommand;
         while (true)
         {
-            foreach(var i in nowCommand.edges)
-            {
-                if (i.checker.Check()&& i.next != null)
-                {
-                    nowCommand = i.next;
-                    break;
-                }
-            }
+            //foreach (var i in nowCommand.edges)
+            //{
+            //    if (i.checker.Check() && i.next != null)
+            //    {
+            //        nowCommand = i.next;
+            //        nowCommand.program.ChangeTrigger();
+            //        break;
+            //    }
+            //}
+            //nowCommand.program.Move();
             //アイテム収集処理（仮）
             dropItemMane.GetDropItems(transform.position);
 
@@ -103,7 +110,7 @@ public class MechController : MonoBehaviour
                         if (agent.isStopped) agent.isStopped = true;
                         Quaternion rot = Quaternion.LookRotation(targetUnit.transform.position-transform.position);
                         transform.rotation= Quaternion.Slerp(transform.rotation,rot,Time.deltaTime*20);
-                        targetUnit.Helth -= Time.deltaTime * myUnit.attack;
+                        targetUnit.SetDamage(Time.deltaTime * myUnit.attack,myUnit);
                         agent.velocity = Vector3.zero;
                     }
                     else

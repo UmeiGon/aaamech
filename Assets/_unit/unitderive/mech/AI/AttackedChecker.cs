@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class AttackedChecker : EdgeChecker
 {
-    float preHelth;
+    bool attackedFlag=false;
+    void GotDamageCheck(Unit _unit)
+    {
+        attackedFlag = true;
+        mech.mechCon.targetUnit = _unit;
+    }
+    bool init = false;
    public override bool Check()
     {
-        if (mech == null) return false;
-        if (mech.Helth<preHelth)
+        if (!init)
         {
-            preHelth = mech.Helth;
+            mech.gotDamage += GotDamageCheck;
+            init = true;
+        }
+        if (attackedFlag)
+        {
+            attackedFlag = false;
             return true;
         }
-        preHelth = mech.Helth;
-        return false;
-       
+        return false;   
     }
 }

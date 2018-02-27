@@ -17,8 +17,13 @@ public class UIMechManager : MonoBehaviour
     Text helthText;
     [SerializeField]
     Toggle allSelectToggle;
+    [SerializeField]
+    Transform createPos;
+    [SerializeField]
+    GameObject mechPre;
     bool allSelectFlag = false;
     bool blockSelectMode = false;
+    
     private void Start()
     {
         var p = GameObject.Find("Parent");
@@ -143,6 +148,13 @@ public class UIMechManager : MonoBehaviour
                 UnitIntoSelectMechsTarget(_unit);
             }
         }
+    }
+  
+    public void CreateMechInstance(MechAITree mechAI)
+    {
+        var m =Instantiate(mechPre);
+        m.transform.position = createPos.position;
+        m.GetComponent<MechController>().aiTree = mechAI;
     }
     void UnitIntoSelectMechsTarget(Unit _unit)
     {

@@ -10,6 +10,8 @@ public class Unit : MonoBehaviour
     private bool lifeZeroDeathFlag=true;
     public GameObject selectEffect;
     public float maxHelth;
+    public delegate void GotDamage(Unit _unit);
+    public GotDamage gotDamage;
     public enum Army
     {
         p1,p2,p3,p4,Neutral
@@ -17,8 +19,14 @@ public class Unit : MonoBehaviour
     public Army armyTag;
     public float Helth
     {
-        set { if (value > maxHelth) maxHelth = value; helth = value;}
+        private set { if (value > maxHelth) maxHelth = value; helth = value;}
         get { return helth; }
+    }
+    //unitからunitにダメージを与える時の関数
+    public void SetDamage(float damage,Unit _unit)
+    {
+        Helth -= damage;
+       if(gotDamage != null)gotDamage(_unit);
     }
     public float attack = 1.0f;
     public virtual void Death() {

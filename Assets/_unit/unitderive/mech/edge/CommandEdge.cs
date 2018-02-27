@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CommandEdge  {
+public class CommandEdge
+{
     public Transform holder;
-    public Command pre=null;
-    public Command next=null;
-    public EdgeChecker checker=null;
+    public Command pre = null;
+    public Command next = null;
+    public EdgeChecker nextChecker = null;
+    public EdgeChecker preChecker = null;
     public virtual bool Check() { return false; }
+
+    public void DeleteMe()
+    {
+        if (pre != null) pre.edges.Remove(this);
+        if (next != null) next.edges.Remove(this);
+        pre = null;
+        next = null;
+    }
     //追加に成功した場合真を返す
     public bool AddPreNode(Command c_node)
     {
@@ -17,10 +27,10 @@ public class CommandEdge  {
             return false;
         }
         //nextが既にある場合
-        if (next!=null)
+        if (next != null)
         {
             //同じ関係性のedgeが無ければpreに
-            if (next.edges.Find(x=>x.pre==c_node||x.next==c_node)==null)
+            if (next.edges.Find(x => x.pre == c_node || x.next == c_node) == null)
             {
                 pre = c_node;
                 c_node.edges.Add(this);
