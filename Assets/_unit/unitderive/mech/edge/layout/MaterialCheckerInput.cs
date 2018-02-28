@@ -8,7 +8,7 @@ public class MaterialCheckerInput : CheckerInput {
     InputField itemValueInputField;
     [SerializeField]
     Dropdown itemDropDown;
-    MaterialChecker checkerInstance;
+   
 
 
     private void Awake()
@@ -20,6 +20,7 @@ public class MaterialCheckerInput : CheckerInput {
         {
             slist.Add(id.NameItemID());
         }
+        itemDropDown.ClearOptions();
         itemDropDown.AddOptions(slist);
         itemDropDown.value = 0;
         itemDropDown.onValueChanged.AddListener(ItemIDDropDownChanged);
@@ -28,7 +29,7 @@ public class MaterialCheckerInput : CheckerInput {
     {
         if (ide.SelectChecker is MaterialChecker)
         {
-            checkerInstance = ide.SelectChecker as MaterialChecker;
+            var checkerInstance = ide.SelectChecker as MaterialChecker;
             itemValueInputField.text = checkerInstance.needValue.ToString();
             itemDropDown.value = (int)checkerInstance.itemNum;
         }
@@ -39,10 +40,18 @@ public class MaterialCheckerInput : CheckerInput {
     }
     void ItemIDDropDownChanged(int _num)
     {
-        checkerInstance.itemNum = (ItemID)_num;
+        if (ide.SelectChecker is MaterialChecker)
+        {
+            var checkerInstance = ide.SelectChecker as MaterialChecker;
+            checkerInstance.itemNum = (ItemID)_num;
+        }
     }
     void ItemValueInputChanged(string _text)
     {
-        checkerInstance.needValue = int.Parse(_text);
+        if (ide.SelectChecker is MaterialChecker)
+        {
+            var checkerInstance = ide.SelectChecker as MaterialChecker;
+            checkerInstance.needValue = int.Parse(_text);
+        }
     }
 }

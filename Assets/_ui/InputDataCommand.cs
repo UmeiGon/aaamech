@@ -26,10 +26,12 @@ public class InputDataCommand : MonoBehaviour {
         {
             slist.Add(i.nodeName);
         }
+        commandTypeDrop.ClearOptions();
         commandTypeDrop.AddOptions(slist);
         commandTypeDrop.value = 0;
         commandTypeDrop.onValueChanged.AddListener(NodeTypeChanged);
         comaMane.commandChanged += SelectCommandChanged;
+        commandTypeDrop.interactable = false;
     }
     void SetLayOut()
     {
@@ -37,7 +39,7 @@ public class InputDataCommand : MonoBehaviour {
         {
             i.SetActive(false);
         }
-        layOutList[commandTypeDrop.value].SetActive(true);
+        if(comaMane.SelectNode!=null)layOutList[commandTypeDrop.value].SetActive(true);
     }
  
     //ノードタイプが変更されるたびに新しいインスタンスを生成

@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class CloseButton : MonoBehaviour {
     [SerializeField]
-    GameObject closeObject;
+    Canvas closeCanvas;
 	public void CloseOnClick()
     {
-        closeObject.SetActive(false);
+        closeCanvas.enabled=false;
     }
 }

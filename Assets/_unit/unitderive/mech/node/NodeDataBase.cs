@@ -6,9 +6,9 @@ public class NodeData
 {
     public string nodeName;
     public System.Type type;
-    public NodeData(string edge_name, System.Type _type)
+    public NodeData(string node_name, System.Type _type)
     {
-        nodeName = edge_name;
+        nodeName = node_name;
         type = _type;
     }
     public CommandProgram GetProgramInstance()

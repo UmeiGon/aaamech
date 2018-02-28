@@ -5,11 +5,8 @@ using UnityEngine;
 public class MaterialUnit : Unit {
 
 
-    public enum MatTag
-    {
-        Tree,Stone
-    }
-    public MatTag matTag;
+  
+    public MaterialID matTag;
     //死んだときにitemのstoneをdropする。
     public GameObject dropObject;
     public override void Death()

@@ -47,6 +47,7 @@ public class InputDataEdge : MonoBehaviour
         {
             slist.Add(s.edgeName);
         }
+        edgeTypeDropDown.ClearOptions();
         edgeTypeDropDown.AddOptions(slist);
         edgeTypeDropDown.onValueChanged.AddListener(EdgeTypeChanged);
         checkerStreamDrop.onValueChanged.AddListener(CheckerStreamChanged);
@@ -56,8 +57,11 @@ public class InputDataEdge : MonoBehaviour
             "正方向",
             "逆方向"
         };
+        checkerStreamDrop.ClearOptions();
         checkerStreamDrop.AddOptions(nplist);
         checkerStreamDrop.value = 0;
+        edgeTypeDropDown.interactable = false;
+        checkerStreamDrop.interactable = false;
     }
     void CheckerStreamChanged(int _num)
     {
@@ -92,7 +96,7 @@ public class InputDataEdge : MonoBehaviour
         {
             i.SetActive(false);
         }
-        layOutList[edgeTypeDropDown.value].SetActive(true);
+        if(comaMane.SelectEdge!=null)layOutList[edgeTypeDropDown.value].SetActive(true);
     }
     //selectcheckerの情報をUIに適用
     void ApplyUI()
@@ -105,7 +109,7 @@ public class InputDataEdge : MonoBehaviour
         }
         else
         {
-            edgeTypeDropDown.value = EdgeDataBase.GetInstance().FindTypeNumber(SelectChecker.GetType());
+            edgeTypeDropDown.value = EdgeDataBase.GetInstance().FindTypeNumber(SelectChecker);
         }
     }
     void SelectCommandEdgeChanged()

@@ -7,7 +7,7 @@ public static class ItemIDExt
 {
     public static string NameItemID(this ItemID value)
     {
-        string[] values = {"石","木",};
+        string[] values = {"石","木材",};
         return values[(int)value];
     }
 }

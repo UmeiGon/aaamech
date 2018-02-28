@@ -8,14 +8,14 @@ public class AttackedChecker : EdgeChecker
     void GotDamageCheck(Unit _unit)
     {
         attackedFlag = true;
-        mech.mechCon.targetUnit = _unit;
+        mech.targetUnit = _unit;
     }
     bool init = false;
    public override bool Check()
     {
         if (!init)
         {
-            mech.gotDamage += GotDamageCheck;
+            mech.myUnit.gotDamage += GotDamageCheck;
             init = true;
         }
         if (attackedFlag)

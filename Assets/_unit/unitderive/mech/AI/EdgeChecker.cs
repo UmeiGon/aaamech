@@ -6,6 +6,6 @@ using UnityEngine;
 public abstract class EdgeChecker
 {
     
-    public MechUnit mech=null;
+    public MechController mech=null;
     public abstract  bool Check();
 }

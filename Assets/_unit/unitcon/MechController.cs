@@ -11,7 +11,7 @@ public class MechController : MonoBehaviour
     public Unit targetUnit;
     public MechUnit myUnit;
     Command nowCommand;
-    UnitLists unitList;
+    public UnitLists unitList;
     DropItemManager dropItemMane;
     NavMeshObstacle navObs;
     public ParticleSystem AttackEffect;
@@ -86,6 +86,14 @@ public class MechController : MonoBehaviour
         {
             if(i.program!=null)i.program.mechCon = this;
         }
+        foreach (var i in aiTree.edgeList)
+        {
+            if (i.nextChecker != null) i.nextChecker.mech = this;
+        }
+        foreach (var i in aiTree.edgeList)
+        {
+            if (i.preChecker != null) i.preChecker.mech = this;
+        }
     }
     void AIUpdate()
     {
@@ -154,18 +162,6 @@ public class MechController : MonoBehaviour
                 {
                     if (AttackEffect.isPlaying) AttackEffect.Stop();
                     if (!agent.isStopped) agent.isStopped = false;
-                    switch (mode)
-                    {
-                        case Mode.Attack:
-                            targetUnit = unitList.NearUnitSearch(myUnit, unitList.enemyList);
-                            break;
-                        case Mode.PickUpItem:          
-                            targetUnit = unitList.NearUnitSearch(myUnit, unitList.matList);
-                            break;
-                        case Mode.Build:
-                            targetUnit = unitList.NearUnitSearch(myUnit, unitList.buildList);
-                            break;
-                    }
                    
                 }
             }

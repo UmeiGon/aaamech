@@ -3,145 +3,122 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text;
 using System.IO;
-public class AISaveLoad : MonoBehaviour
+public struct CommandSaveData
 {
-    public struct CommandData
+    public int commandID;
+    public Vector2 localPos;
+    public int programID;
+}
+public struct EdgeSaveData
+{
+    public int edgeID;
+    public int preCommandID;
+    public int nextCommandID;
+    public int preCheckID;
+    public int nextCheckID;
+}
+public class SavePackage
+{
+    public int firstCommandID;
+    public List<CommandSaveData> commandSaveList = new List<CommandSaveData>();
+    public List<EdgeSaveData> edgeSaveList = new List<EdgeSaveData>();
+}
+public class AISaveLoad
+{
+    static AISaveLoad inst;
+    public static AISaveLoad GetInstance()
     {
-        public int commandID;
-        public Vector2 localPos;
-        public int programID;
-        //List<int> edgeIDList;
+        if (inst == null)
+        {
+            inst = new AISaveLoad();
+        }
+        return inst;
     }
-    public struct EdgeData
-    {
-        public int edgeID;
-        public int preCommandID;
-        public int nextCommandID;
-        public int preCheckID;
-        public int nextCheckID;
-    }
+   
     public void SaveAITree(MechAITree _tree)
     {
-        StreamWriter sw = new StreamWriter(_tree.treeName + "saveData" + ".csv", false, Encoding.GetEncoding("Shift_JIS"));
+        StreamWriter sw = new StreamWriter(Application.persistentDataPath + "saveData" + ".csv", false, Encoding.GetEncoding("Shift_JIS"));
+        //firstcommand
+        if (_tree.firstCommand == null)
+        {
+            sw.WriteLine("0");
+        }
+        else
+        {
+            sw.WriteLine(_tree.commandList.IndexOf(_tree.firstCommand).ToString());
+        }
+        
+        sw.WriteLine("commmand");
         int n = 0;
         foreach (var i in _tree.commandList)
         {
-            List<string> slist = new List<string> { n.ToString(), i.holder.localPosition.x.ToString(), i.holder.localPosition.y.ToString(), i.holder.localPosition.z.ToString(), NodeDataBase.GetInstance().FindTypeNumber(i.program).ToString(), };
-            var str2 =  string.Join(",",slist.ToArray());
+            List<string> slist = new List<string> { n.ToString(), i.holder.localPosition.x.ToString(), i.holder.localPosition.y.ToString(), NodeDataBase.GetInstance().FindTypeNumber(i.program).ToString(), };
+            var str2 = string.Join(",", slist.ToArray());
             sw.WriteLine(str2);
             n++;
         }
+        sw.WriteLine("edge");
         //edge
-        int y=0;
+        int y = 0;
         foreach (var i in _tree.edgeList)
         {
-            ////preとnextともにある場合
-            //if (i.pre != null && i.next != null)
-            //{
-            //    List<string> slist = new List<string> { y.ToString(), _tree.commandList.Find(i.pre), NodeDataBase.GetInstance().FindTypeNumber(i.program).ToString(), };
-            //    var str2 = string.Join(",", slist.ToArray());
-            //    sw.WriteLine(str2);
-            //}        
-            //y++;
-        }
-    }
-    // データ型の定義
-    public struct HipData
-    {
-        public int hipId;
-        public Vector3 pos;
-        public Color color;
-        public float magnitude; // 等級
-
-        public HipData(int _id, Vector3 _pos, Color _color, float _magnitude)
-        {
-            hipId = _id;
-            pos = _pos;
-            color = _color;
-            magnitude = _magnitude;
-        }
-        public HipData(HipData _data)
-        {
-            hipId = _data.hipId;
-            pos = _data.pos;
-            color = _data.color;
-            magnitude = _data.magnitude;
-        }
-    }
-
-    // 読み込むデータ
-    [SerializeField] TextAsset lightFile = null;
-    // 読み込んだデータを格納するリスト
-    public List<HipData> hipList;
-
-    // Use this for initialization
-    void Start()
-    {
-        hipList = createHipList(lightFile);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (hipList != null)
-        {
-            foreach (HipData hip in hipList)
+            //preとnextともにある場合
+            if (i.pre != null && i.next != null)
             {
-                Debug.DrawLine(Vector3.zero, hip.pos * 500f, Color.white * (1f / hip.magnitude));
+                List<string> slist = new List<string> { y.ToString(), _tree.commandList.IndexOf(i.pre).ToString(), _tree.commandList.IndexOf(i.next).ToString(), EdgeDataBase.GetInstance().FindTypeNumber(i.preChecker).ToString(), EdgeDataBase.GetInstance().FindTypeNumber(i.nextChecker).ToString() };
+                var str2 = string.Join(",", slist.ToArray());
+                sw.WriteLine(str2);
             }
+            y++;
         }
+        sw.Close();
     }
-
-    // ファイルからデータを読み込みデータリストに格納する
-    List<HipData> createHipList(TextAsset _lightsFile)
+    public SavePackage LoadAITree()
     {
-        List<HipData> list = new List<HipData>();
-        StringReader sr = new StringReader(_lightsFile.text);
-        while (sr.Peek() > -1)
+        StreamReader sr = new StreamReader(Application.persistentDataPath + "saveData" + ".csv", Encoding.GetEncoding("Shift_JIS"));
+        if (sr == null)
         {
-            string lineStr = sr.ReadLine();
-            HipData data;
-            if (stringToHipData(lineStr, out data))
+            Debug.Log("ロード失敗");
+            return null;
+        }
+        List<CommandSaveData> comaData = new List<CommandSaveData>();
+        string line;
+        int firstId = int.Parse(sr.ReadLine());
+        sr.ReadLine();
+        // 行がnullじゃない間(つまり次の行がある場合は)、処理をする
+        while ((line = sr.ReadLine()) != null )
+        {
+            if (line == "edge") break;
+            string[] comaArray = line.Split(',');
+            var c = new CommandSaveData()
             {
-                list.Add(data);
-            }
+                commandID = int.Parse(comaArray[0]),
+                localPos = new Vector2(float.Parse(comaArray[1]), float.Parse(comaArray[2])),
+                programID = int.Parse(comaArray[3])
+            };
+            comaData.Add(c);
+
+        }
+        List<EdgeSaveData> edgeData = new List<EdgeSaveData>();
+        while ((line = sr.ReadLine()) != null)
+        {
+            string[] comaArray = line.Split(',');
+            var e = new EdgeSaveData()
+            {
+                edgeID = int.Parse(comaArray[0]),
+                preCommandID = int.Parse(comaArray[1]),
+                nextCommandID = int.Parse(comaArray[2]),
+                preCheckID = int.Parse(comaArray[3]),
+                nextCheckID = int.Parse(comaArray[4]),
+            };
+            edgeData.Add(e);
         }
         sr.Close();
-        return list;
-    }
-
-    // CSV文字列からデータ型に変換
-    bool stringToHipData(string _hipStr, out HipData data)
-    {
-        bool ret = true;
-        data = new HipData();
-        // カンマ区切りのデータを文字列の配列に変換
-        string[] dataArr = _hipStr.Split(',');
-        try
+        return new SavePackage()
         {
-            // 文字列をint,floatに変換する
-            int hipId = int.Parse(dataArr[0]);
-            float hlH = float.Parse(dataArr[1]);
-            float hlM = float.Parse(dataArr[2]);
-            float hlS = float.Parse(dataArr[3]);
-            int hsSgn = int.Parse(dataArr[4]);
-            float hsH = float.Parse(dataArr[5]);
-            float hsM = float.Parse(dataArr[6]);
-            float hsS = float.Parse(dataArr[7]);
-            float mag = float.Parse(dataArr[8]);
-            Color col = Color.gray;
-            float hDeg = (360f / 24f) * (hlH + hlM / 60f + hlS / 3600f);
-            float sDeg = (hsH + hsM / 60f + hsS / 3600f) * (hsSgn == 0 ? -1f : 1f);
-            Quaternion rotL = Quaternion.AngleAxis(hDeg, Vector3.up);
-            Quaternion rotS = Quaternion.AngleAxis(sDeg, Vector3.right);
-            Vector3 pos = rotL * rotS * Vector3.forward;
-            data = new HipData(hipId, pos, Color.white, mag);
-        }
-        catch
-        {
-            ret = false;
-            Debug.Log("data err");
-        }
-        return ret;
+            edgeSaveList = edgeData,
+            commandSaveList = comaData,
+            firstCommandID = firstId,
+        };  
     }
 }

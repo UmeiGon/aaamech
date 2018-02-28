@@ -31,12 +31,13 @@ public class EdgeDataBase
         }
         return inst;
     }
-    public int FindTypeNumber(System.Type _type)
+    public int FindTypeNumber(EdgeChecker _edge)
     {
+        if (_edge == null) return 0;
         int n = 0;
         foreach (var i in edgeDataList)
         {
-            if (i.type == _type)
+            if (i.type == _edge.GetType())
             {
                 return n;
             }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class NodeOnUI :MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHandler,IPointerDownHandler{
+public class NodeOnUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
+{
     Vector3 offSet;
     [SerializeField]
     UnityEngine.UI.Text nodeNameText;
@@ -20,24 +21,18 @@ public class NodeOnUI :MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHan
     }
     private void Start()
     {
-        commandNode.holder = transform;
-
+        StartCoroutine(TextApply());
     }
-    //IEnumerator TextApply()
-    //{
-    //    while (true )
-    //    {
-    //        if (commandNode.program != null)
-    //        {
-    //            nodeNameText.text = ""+NodeDataBase.GetInstance().nodeDataList[NodeDataBase.GetInstance().FindTypeNumber(commandNode.program.GetType())].nodeName;
-    //        }
-    //        else
-    //        {
-    //            nodeNameText.text = "";
-    //        }
-    //        yield return null;
-    //    }
-    //}
+    IEnumerator TextApply()
+    {
+        while (true)
+        {
+
+            nodeNameText.text = "" + NodeDataBase.GetInstance().nodeDataList[NodeDataBase.GetInstance().FindTypeNumber(commandNode.program)].nodeName;
+
+            yield return null;
+        }
+    }
     public void SelectTrigger()
     {
         GetComponent<Animator>().SetBool("selectFlag", true);
@@ -48,7 +43,7 @@ public class NodeOnUI :MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHan
     }
     public void OnBeginDrag(PointerEventData e)
     {
-        offSet=transform.position - Input.mousePosition;
+        offSet = transform.position - Input.mousePosition;
     }
     public void OnDrag(PointerEventData e)
     {
@@ -73,11 +68,11 @@ public class NodeOnUI :MonoBehaviour, IBeginDragHandler,IDragHandler,IEndDragHan
         //{
 
         //}
-      
+
     }
     public void OnEndDrag(PointerEventData e)
     {
-      
+
     }
     public void OnPointerDown(PointerEventData e)
     {
