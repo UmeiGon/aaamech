@@ -32,12 +32,13 @@ public class NodeDataBase
         return inst;
     }
     public List<NodeData> nodeDataList;
-    public int FindTypeNumber(System.Type _type)
+    public int FindTypeNumber(CommandProgram _command)
     {
+        if (_command == null) return 0;
         int n = 0;
         foreach (var i in nodeDataList)
         {
-            if (i.type==_type)
+            if (i.type==_command.GetType())
             {
                 return n;
             }

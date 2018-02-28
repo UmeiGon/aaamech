@@ -1,16 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Text;
 using System.IO;
 public class AISaveLoad : MonoBehaviour
 {
-    public struct CommandData{
+    public struct CommandData
+    {
         public int commandID;
         public Vector2 localPos;
         public int programID;
-        List<int> edgeIDList;
+        //List<int> edgeIDList;
     }
-    public struct EdgeData {
+    public struct EdgeData
+    {
         public int edgeID;
         public int preCommandID;
         public int nextCommandID;
@@ -19,7 +22,28 @@ public class AISaveLoad : MonoBehaviour
     }
     public void SaveAITree(MechAITree _tree)
     {
-
+        StreamWriter sw = new StreamWriter(_tree.treeName + "saveData" + ".csv", false, Encoding.GetEncoding("Shift_JIS"));
+        int n = 0;
+        foreach (var i in _tree.commandList)
+        {
+            List<string> slist = new List<string> { n.ToString(), i.holder.localPosition.x.ToString(), i.holder.localPosition.y.ToString(), i.holder.localPosition.z.ToString(), NodeDataBase.GetInstance().FindTypeNumber(i.program).ToString(), };
+            var str2 =  string.Join(",",slist.ToArray());
+            sw.WriteLine(str2);
+            n++;
+        }
+        //edge
+        int y=0;
+        foreach (var i in _tree.edgeList)
+        {
+            ////preとnextともにある場合
+            //if (i.pre != null && i.next != null)
+            //{
+            //    List<string> slist = new List<string> { y.ToString(), _tree.commandList.Find(i.pre), NodeDataBase.GetInstance().FindTypeNumber(i.program).ToString(), };
+            //    var str2 = string.Join(",", slist.ToArray());
+            //    sw.WriteLine(str2);
+            //}        
+            //y++;
+        }
     }
     // データ型の定義
     public struct HipData

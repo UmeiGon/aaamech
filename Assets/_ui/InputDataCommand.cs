@@ -59,7 +59,7 @@ public class InputDataCommand : MonoBehaviour {
         }
         else
         {
-            commandTypeDrop.value = NodeDataBase.GetInstance().FindTypeNumber(SelectProgram.GetType());
+            commandTypeDrop.value = NodeDataBase.GetInstance().FindTypeNumber(SelectProgram);
         }
     }
     void SelectCommandChanged()
