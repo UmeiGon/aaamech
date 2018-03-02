@@ -9,7 +9,7 @@ public class CameraControll : MonoBehaviour {
     }
     IEnumerator CameraControllUpdate()
     {
-        float  speed = 45.0f;
+        float  speed = 105.0f;
         Vector3 _move=new Vector3(0,0,0);
         while (true)
         {

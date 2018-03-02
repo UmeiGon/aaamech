@@ -6,7 +6,7 @@ public enum BuildID
 {
     NONE = -1,
     Bridge = 0,
-    StoneBlock,
+    Tower,
 }
 public  class BuildData
 {
@@ -35,9 +35,9 @@ public class BuildManager : MonoBehaviour
     {
         set
         {
-            Destroy(buildUnit);
+            buildUnit=null;
             buildNum = value;
-            buildUnit = Instantiate(buildDataTable[(int)buildNum].objPre);
+            buildUnit = Instantiate(buildDataTable[(int)buildNum].objPre,GameObject.Find("Parent").transform);
         }
         get {return buildNum; }
     }
@@ -46,12 +46,12 @@ public class BuildManager : MonoBehaviour
     PlayerItemManager pItemManager;
     private void Start()
     {
-        pItemManager = PlayerItemManager.GetInstance();
+        pItemManager = GameObject.Find("Parent").GetComponentInChildren<PlayerItemManager>();
         var buildDataList = new List<BuildData>
         {
             new BuildData(BuildID.NONE, "null", null),
             new BuildData(BuildID.Bridge, "BridgeUnit", new Dictionary<int, int>() { { (int)ItemID.Wood, 20 } }),
-            new BuildData(BuildID.StoneBlock, "StoneBlock", new Dictionary<int, int>() { { (int)ItemID.Stone, 20 } }),
+            new BuildData(BuildID.Tower, "HealTower", new Dictionary<int, int>() { { (int)ItemID.Iron, 5 } }),
         };
         //todictionaryでidをkeyにしたdictionaryを作る
         buildDataTable = buildDataList.ToDictionary(d=>(int)d.id);
@@ -88,15 +88,14 @@ public class BuildManager : MonoBehaviour
                 case BuildID.NONE:
                     break;
                 case BuildID.Bridge:
+                case BuildID.Tower:
                     buildUnit.transform.position = obj_pos;
                     if (Input.GetKeyDown(KeyCode.Mouse0))
                     {
+                        buildUnit.GetComponent<BuildUnit>().enabled = true;
                         pItemManager.UsingItem(buildDataTable[(int)buildNum].useItems);
                         buildNum = BuildID.NONE;
                     }
-                    break;
-                case BuildID.StoneBlock:
-                    buildUnit.transform.position = obj_pos;
                     break;
                 default:
                     break;

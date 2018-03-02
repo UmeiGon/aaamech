@@ -53,6 +53,7 @@ public class EdgeDataBase
             new EdgeData("無し",null),
             new EdgeData("攻撃されたとき",typeof(AttackedChecker)),
              new EdgeData("素材を採集した時",typeof(MaterialChecker)),
+             new EdgeData("体力が数値以上か以下の時",typeof(HelthDamagedChecker)),
         };
     }
 }

@@ -5,7 +5,4 @@ using UnityEngine.UI;
 public class CheckerInput : MonoBehaviour {
     [SerializeField]
     protected InputDataEdge ide;
-    protected void Awake()
-    {
-    }
 }

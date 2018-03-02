@@ -13,7 +13,6 @@ public class MaterialCheckerInput : CheckerInput {
 
     private void Awake()
     {
-        base.Awake();
         itemValueInputField.onEndEdit.AddListener(ItemValueInputChanged);
         List<string> slist = new List<string>();
         foreach (ItemID id in  Enum.GetValues(typeof(ItemID)))
@@ -43,7 +42,7 @@ public class MaterialCheckerInput : CheckerInput {
         if (ide.SelectChecker is MaterialChecker)
         {
             var checkerInstance = ide.SelectChecker as MaterialChecker;
-            checkerInstance.itemNum = (ItemID)_num;
+            checkerInstance.itemNum = _num;
         }
     }
     void ItemValueInputChanged(string _text)

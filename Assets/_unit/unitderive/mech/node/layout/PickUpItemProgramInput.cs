@@ -24,7 +24,7 @@ public class PickUpItemProgramInput : ProgramInput
         if (idc.SelectProgram is PickUpItemProgram)
         {
             var pickProgram = idc.SelectProgram as PickUpItemProgram;
-            matIdDrop.value = (int)pickProgram.pickItemID;
+            matIdDrop.value = pickProgram.pickItemID;
         }
     }
     void PickItemIDropDownChanged(int _num)
@@ -32,7 +32,7 @@ public class PickUpItemProgramInput : ProgramInput
         if (idc.SelectProgram is PickUpItemProgram)
         {
             var a = idc.SelectProgram as PickUpItemProgram;
-            a.pickItemID = (MaterialID)_num;
+            a.pickItemID = _num;
         }
     }
 }

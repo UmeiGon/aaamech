@@ -31,7 +31,7 @@ public class UIMechManager : MonoBehaviour
         mechCommandDropDown.ClearOptions();
        
         mechManager.selectTriggerFuncs = MechDropDownReload;
-        StartCoroutine(ScreenSelectBlock());
+        //StartCoroutine(ScreenSelectBlock());
         AllSelectFlagChange();
     }
     private Vector3 startPos, endPos;
@@ -152,7 +152,7 @@ public class UIMechManager : MonoBehaviour
   
     public void CreateMechInstance(MechAITree mechAI)
     {
-        var m =Instantiate(mechPre);
+        var m =Instantiate(mechPre,GameObject.Find("Parent").transform);
         m.transform.position = createPos.position;
         m.GetComponent<MechController>().SetAITree(mechAI);
     }

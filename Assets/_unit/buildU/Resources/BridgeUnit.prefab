@@ -424,13 +424,15 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1493216929530150}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b9d7db3b8ab0d14448859cebb0719deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   selectEffect: {fileID: 0}
   maxHelth: 10
+  itemid: 0
+  itemValue: 0
   armyTag: 0
   attack: 1
   buildObject: {fileID: 1940100512609074}

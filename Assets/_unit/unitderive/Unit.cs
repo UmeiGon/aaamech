@@ -12,6 +12,9 @@ public class Unit : MonoBehaviour
     public float maxHelth;
     public delegate void GotDamage(Unit _unit);
     public GotDamage gotDamage;
+    public ItemID itemid = 0;
+    public int itemValue = 0;
+    public float radius = 0;
     public enum Army
     {
         p1,p2,p3,p4,Neutral
@@ -19,7 +22,12 @@ public class Unit : MonoBehaviour
     public Army armyTag;
     public float Helth
     {
-        private set { if (value > maxHelth) maxHelth = value; helth = value;}
+        set { if (value > maxHelth) helth = maxHelth;
+            else
+            {
+                helth = value;
+            }
+        }
         get { return helth; }
     }
     //unitからunitにダメージを与える時の関数
@@ -30,7 +38,12 @@ public class Unit : MonoBehaviour
     }
     public float attack = 1.0f;
     public virtual void Death() {
-        GameObject.Find("Parent").GetComponentInChildren<UnitLists>().DeleteUnit(this);
+        var p = GameObject.Find("Parent");
+        p.GetComponentInChildren<UnitLists>().DeleteUnit(this);
+        if (itemValue > 0)
+        {
+            p.GetComponentInChildren<PlayerItemManager>().itemDataTable[(int)itemid].Value += itemValue;
+        }
         Destroy(gameObject);
     }
     protected void LifeZeroDeath()
@@ -57,6 +70,5 @@ public class Unit : MonoBehaviour
     private void Start()
     {
         Init();
-
     }
 }

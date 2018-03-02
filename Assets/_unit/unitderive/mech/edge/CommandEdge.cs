@@ -18,6 +18,18 @@ public class CommandEdge
         pre = null;
         next = null;
     }
+    //自分のpreかnextが自分(edge)を持っていなかった場合追加する。
+    public void CommandAddMe()
+    {
+        if (pre != null&& pre.edges.Find(x => x == this)==null)
+        {
+            pre.edges.Add(this);
+        }
+        if (next != null && next.edges.Find(x => x == this) == null)
+        {
+            next.edges.Add(this);
+        }
+    }
     //追加に成功した場合真を返す
     public bool AddPreNode(Command c_node)
     {

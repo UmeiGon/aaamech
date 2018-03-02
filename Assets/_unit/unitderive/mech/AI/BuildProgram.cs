@@ -10,6 +10,9 @@ public class BuildProgram : CommandProgram {
     }
     public override void Move()
     {
-        mechCon.unitList.NearUnitSearch(mechCon.myUnit,mechCon.unitList.buildList);
+        if (mechCon.targetUnit==null)
+        {
+            mechCon.targetUnit=mechCon.unitList.NearUnitSearch(mechCon.myUnit, mechCon.unitList.buildList);
+        }
     }
 }

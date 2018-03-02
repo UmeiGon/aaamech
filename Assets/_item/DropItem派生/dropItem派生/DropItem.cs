@@ -7,7 +7,7 @@ public class DropItem : MonoBehaviour {
     public float pickUpDelay = 1.0f;
     private PlayerItemManager pItemMane;
     private GameObject pare;
-    public ItemID id;
+ 
     public bool IsLife { private set; get; }
     private void Awake()
     {
@@ -35,7 +35,7 @@ public class DropItem : MonoBehaviour {
     }
     public  void Picked() {
         if (pickUpDelay > 0)return;
-        PlayerItemManager.GetInstance().itemDataTable[(int)id].Value += dropValue;
+       
         IsLife = false;
     }
 }

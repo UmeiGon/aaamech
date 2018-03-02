@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Reflection;
 public class UICommandManager : MonoBehaviour
 {
 
@@ -23,7 +24,16 @@ public class UICommandManager : MonoBehaviour
     Color defaultNodeColor;
     [SerializeField]
     Color firstNodeColor;
- 
+    [SerializeField]
+    PlayerItemManager pItemMane;
+    [SerializeField]
+    int needMechIronValue=10;
+    [SerializeField]
+    Button goButton;
+    [SerializeField]
+    Text ironText;
+    [SerializeField]
+    Text useText;
     MechAITree nowTree = null;
     //実態こっちは使用してはいけない
     EdgeOnUI selectEdgeReal;
@@ -38,8 +48,19 @@ public class UICommandManager : MonoBehaviour
         firstChangeButton.interactable = false;
         deleteEdgeButton.interactable = false;
         deleteNodeButton.interactable = false;
+        goButton.interactable = false;
+        goButton.onClick.AddListener(CreateMechInstance);
         firstChangeButton.onClick.AddListener(FirstChange);
+        useText.text = needMechIronValue+"を消費してメカを作成";
+        pItemMane.itemDataTable[(int)ItemID.Iron].valueChanged += GoButtonChange;
+        ironText.text = pItemMane.itemDataTable[(int)ItemID.Iron].Value.ToString();
+        pItemMane.itemDataTable[(int)ItemID.Iron].Value += 40;
         nowTree = new MechAITree();
+    }
+    public void GoButtonChange(int _value)
+    {
+        ironText.text = _value.ToString();
+        goButton.interactable=(_value >= needMechIronValue);
     }
     public EdgeOnUI SelectEdge
     {
@@ -142,7 +163,27 @@ public class UICommandManager : MonoBehaviour
     [SerializeField] UIMechManager u;
     public void CreateMechInstance()
     {
+        if (nowTree.firstCommand == null) return;
+        pItemMane.itemDataTable[(int)ItemID.Iron].Value -= needMechIronValue;
+        //nowTreeのcloneを渡す
         u.CreateMechInstance(nowTree);
+        SaveMechAI("Inst");
+        HolderReset();
+        nowTree = new MechAITree();
+        LoadMechAI("Inst");
+    }
+    public void HolderReset()
+    {
+        SelectEdge = null;
+        SelectNode = null;
+        foreach (var i in nowTree.commandList)
+        {
+            Destroy(i.holder.gameObject);
+        }
+        foreach (var i in nowTree.edgeList)
+        {
+            Destroy(i.holder.gameObject);
+        }
     }
     public void TreeReset()
     {
@@ -160,9 +201,14 @@ public class UICommandManager : MonoBehaviour
         }
         nowTree = new MechAITree();
     }
-    public void LoadMechAI()
+    public void SaveMechAI(string file_name="dafault")
     {
-        var d=AISaveLoad.GetInstance().LoadAITree();
+        if (nowTree.firstCommand == null) return;
+        AISaveLoad.GetInstance().SaveAITree(nowTree, file_name);
+    }
+    public void LoadMechAI(string file_name="default")
+    {
+        var d=AISaveLoad.GetInstance().LoadAITree(file_name);
         if (d == null) return;
         TreeReset();
         foreach (var c in d.commandSaveList)
@@ -173,10 +219,15 @@ public class UICommandManager : MonoBehaviour
         {
             LoadCreateEdge(e);
         }
-        
+        ////commandにedgeを対応させる
+        //foreach (var i in nowTree.edgeList)
+        //{
+        //    i.CommandAddMe();
+        //}
     }
     public void LoadCreateCommand(CommandSaveData _data,int firstId)
     {
+        var filedFlag = (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
         var c = Instantiate(commandNodePre, new Vector3(0, 0, 0), new Quaternion(), commandBackPanel.transform);
         c.transform.localPosition = _data.localPos;
         c.transform.SetAsLastSibling();
@@ -188,10 +239,18 @@ public class UICommandManager : MonoBehaviour
         nodeui.endLimitPosition = commandBackPanel.GetComponent<RectTransform>().sizeDelta;
         nodeui.startLimitPosition.y *= -1;
         nodeui.endLimitPosition.y *= -1;
+        //programのインスタンスをゲットして,メンバ変数も入力
+        if((nodeui.commandNode.program = NodeDataBase.GetInstance().nodeDataList[_data.programID].GetProgramInstance()) != null)
+        {
+            var fields = nodeui.commandNode.program.GetType().GetFields(filedFlag);
+            for (int i = 0; i < fields.Length; i++)
+            {
+                fields[i].SetValue(nodeui.commandNode.program,_data.programValues[i]);
+            }
+        }
 
-        nodeui.commandNode.program = NodeDataBase.GetInstance().nodeDataList[_data.programID].GetProgramInstance();
         nowTree.commandList.Add(nodeui.commandNode);
-        //firstがまだ設定されて無かったらfirstに
+        //firstIdだった場合色を変える
         if (_data.commandID==firstId)
         {
             nowTree.firstCommand = nodeui.commandNode;
@@ -204,23 +263,38 @@ public class UICommandManager : MonoBehaviour
     }
     public void LoadCreateEdge(EdgeSaveData _data)
     {
+        var filedFlag = (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
         //nodeClickedPopPanel.SetActive(false);
         var edge = Instantiate(commandEdgePre, Vector3.zero, new Quaternion(), commandBackPanel.transform).GetComponent<EdgeOnUI>();
         edge.cManager = this;
         edge.transform.localPosition = Vector3.zero;
         edge.commandEdge.AddPreNode(nowTree.commandList[_data.preCommandID]);
-        edge.commandEdge.preChecker = EdgeDataBase.GetInstance().edgeDataList[_data.preCheckID].GetCheckerInstance();
+        //precheckerデータ入力
+        if((edge.commandEdge.preChecker = EdgeDataBase.GetInstance().edgeDataList[_data.preCheckID].GetCheckerInstance()) != null)
+        {
+            var fields = edge.commandEdge.preChecker.GetType().GetFields(filedFlag);
+            for (int i=0;i<fields.Length;i++)
+            {
+                fields[i].SetValue(edge.commandEdge.preChecker,_data.preValues[i]);
+            }
+        }
+
         edge.commandEdge.AddNextNode(nowTree.commandList[_data.nextCommandID]);
-        edge.commandEdge.nextChecker = EdgeDataBase.GetInstance().edgeDataList[_data.nextCheckID].GetCheckerInstance();
+        //nextcheckerデータ入力
+        if ((edge.commandEdge.nextChecker = EdgeDataBase.GetInstance().edgeDataList[_data.nextCheckID].GetCheckerInstance()) != null)
+        {
+            var fields = edge.commandEdge.nextChecker.GetType().GetFields(filedFlag);
+            for (int i = 0; i < fields.Length; i++)
+            {
+                fields[i].SetValue(edge.commandEdge.nextChecker, _data.nextValues[i]);
+            }
+        }
+
         edge.transform.SetAsFirstSibling();
         //treeに追加
         nowTree.edgeList.Add(edge.commandEdge);
     }
-    public void SaveMechAI()
-    {
-        AISaveLoad.GetInstance().SaveAITree(nowTree);
-        //gameObject.SetActive(false);
-    }
+   
     void SelectedEdgeTrigger()
     {
         deleteEdgeButton.interactable = true;

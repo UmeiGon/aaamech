@@ -54,6 +54,7 @@ public class NodeDataBase
             new NodeData("敵を探して攻撃",typeof(AttackProgram)),
             new NodeData("採集する",typeof(PickUpItemProgram)),
             new NodeData("建築する",typeof(BuildProgram)),
+            new NodeData("ホームに帰る",typeof(ReturnBaseProgram)),
         };
     }
 }

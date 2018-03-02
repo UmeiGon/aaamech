@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class MaterialChecker :EdgeChecker {
     public int needValue=0;
-    public ItemID itemNum;
+    public int itemNum;
+    PlayerItemManager pItemMane;
+    bool init=false;
     public override bool Check()
     {
-        return (PlayerItemManager.GetInstance().itemDataTable[(int)itemNum].Value >= needValue) ;
+        if (!init)
+        {
+            pItemMane=GameObject.Find("Parent").GetComponentInChildren<PlayerItemManager>();
+            init = true;
+        }
+        return (pItemMane.itemDataTable[itemNum].Value >= needValue) ;
     }
 }

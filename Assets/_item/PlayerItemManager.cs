@@ -1,29 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class PlayerItemManager
+using System;
+public class PlayerItemManager:MonoBehaviour
 {
 
     public Dictionary<int, ItemData> itemDataTable;
     public delegate void ItemChangeTrigger();
     public ItemChangeTrigger changeTrigger = null;
-    static PlayerItemManager instance = null;
-    public static PlayerItemManager GetInstance()
-    {
-        if (instance == null)
-        {
-            instance = new PlayerItemManager();
-        }
-        return instance;
-    }
     PlayerItemManager()
     {
-        itemDataTable = new Dictionary<int, ItemData>
+        itemDataTable = new Dictionary<int, ItemData>();
+        foreach (var a in Enum.GetValues(typeof(ItemID)))
         {
-            { (int)ItemID.Stone, new ItemData() },
-            { (int)ItemID.Wood, new ItemData() }
-        };
+            itemDataTable.Add((int)a,new ItemData());
+        }
         //item数が更新された時にchangeTriggerが実行されるように
         foreach (var i in itemDataTable)
         {

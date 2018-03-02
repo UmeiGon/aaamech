@@ -10,7 +10,7 @@ public class MechUnit : CharacterUnit{
         base.Init();
         mechCon = GetComponent<MechController>();
     }
-    private void Start()
+    private void Awake()
     {
         Init();
     }

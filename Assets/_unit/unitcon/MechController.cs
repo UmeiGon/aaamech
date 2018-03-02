@@ -14,17 +14,18 @@ public class MechController : MonoBehaviour
     public UnitLists unitList;
     DropItemManager dropItemMane;
     NavMeshObstacle navObs;
+    Vector3 basePos;
     public ParticleSystem AttackEffect;
     public enum Mode
     {
-        Attack, PickUpItem,Build, Idle
+        Attack, PickUpItem,Build, Idle,ReturnBase
     }
     public Mode mode;
     public bool attackFlag = false;
-    private Vector3 preTargetPos;
     
     void Start()
     {
+        basePos = transform.position;
         mode = Mode.Idle;
         myUnit = GetComponent<MechUnit>();
         agent = GetComponent<NavMeshAgent>();
@@ -34,10 +35,8 @@ public class MechController : MonoBehaviour
         unitList = pare.GetComponentInChildren<UnitLists>();
         if (aiTree != null)
         {
-            nowCommand = aiTree.firstCommand;
             if(nowCommand.program!=null)nowCommand.program.ChangeTrigger();
         }
-        StartCoroutine(MechMove());
     }
     public void SetTarget(Unit _unit)
     {
@@ -55,13 +54,13 @@ public class MechController : MonoBehaviour
                     targetUnit = _unit;
                 }
                 break;
-            case Mode.Idle:
-                break;
             case Mode.PickUpItem:
                 if (_unit is MaterialUnit)
                 {
                     targetUnit = _unit;
                 }
+                break;
+            default:
                 break;
         }
         if (targetUnit!=null)
@@ -69,10 +68,6 @@ public class MechController : MonoBehaviour
             agent.updatePosition = true;
             agent.SetDestination(targetUnit.transform.position);
         }
-    }
-    public void Attack()
-    {
-
     }
     public void SetMode(int _mode)
     {
@@ -94,6 +89,7 @@ public class MechController : MonoBehaviour
         {
             if (i.preChecker != null) i.preChecker.mech = this;
         }
+        nowCommand = aiTree.firstCommand;
     }
     void AIUpdate()
     {
@@ -121,54 +117,49 @@ public class MechController : MonoBehaviour
         }
         if (nowCommand.program != null) nowCommand.program.Move();
     }
-    IEnumerator MechMove()
+    private void Update()
     {
 
-
-        while (true)
+        AIUpdate();
+        //アイテム収集処理（仮）
+        //dropItemMane.GetDropItems(transform.position);
+        if (mode == Mode.ReturnBase)
         {
-            AIUpdate();
-            //アイテム収集処理（仮）
-            dropItemMane.GetDropItems(transform.position);
-
-            if (mode != Mode.Idle)
+            agent.SetDestination(basePos);
+            if (AttackEffect.isPlaying) AttackEffect.Stop();
+            if (!agent.isStopped) agent.isStopped = false;
+        }
+        else if (mode != Mode.Idle)
+        {
+            if (targetUnit != null)
             {
-                if (targetUnit!=null)
-                {
-                    //前のtargetpositionと違っていたら更新
-                    if (preTargetPos != targetUnit.transform.position) agent.SetDestination(targetUnit.transform.position);
-                    preTargetPos = targetUnit.transform.position;
+                //前のtargetpositionと違っていたら更新
+                agent.SetDestination(targetUnit.transform.position);
 
-                    //10.0f以内に到達したら
-                    var dis = Vector3.Distance(transform.position, targetUnit.transform.position);
-                   
-                    //attack中
-                    if (dis<=45.0f)
-                    {
-                        //トリガー的処理
-                        if(!AttackEffect.isPlaying)AttackEffect.Play();
-                        if (agent.isStopped) agent.isStopped = true;
-                        Quaternion rot = Quaternion.LookRotation(targetUnit.transform.position-transform.position);
-                        transform.rotation= Quaternion.Slerp(transform.rotation,rot,Time.deltaTime*20);
-                        targetUnit.SetDamage(Time.deltaTime * myUnit.attack,myUnit);
-                        agent.velocity = Vector3.zero;
-                    }
-                    else
-                    {
-                        if (AttackEffect.isPlaying) AttackEffect.Stop();
-                    }
+                var dis = Vector3.Distance(transform.position, targetUnit.transform.position);
+                //attack中
+                if (dis <= (45.0f + targetUnit.radius))
+                {
+                    //トリガー的処理
+                    if (!AttackEffect.isPlaying) AttackEffect.Play();
+                    if (agent.isStopped) agent.isStopped = true;
+                    Quaternion rot = Quaternion.LookRotation(targetUnit.transform.position - transform.position);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 20);
+                    agent.velocity = Vector3.zero;
+                    targetUnit.SetDamage(Time.deltaTime * myUnit.attack, myUnit);
                 }
                 else
                 {
                     if (AttackEffect.isPlaying) AttackEffect.Stop();
-                    if (!agent.isStopped) agent.isStopped = false;
-                   
                 }
             }
-   
+            else
+            {
+                if (AttackEffect.isPlaying) AttackEffect.Stop();
+                if (!agent.isStopped) agent.isStopped = false;
 
-            yield return null;
+            }
         }
-
     }
+
 }

@@ -10,7 +10,7 @@ public class EdgeCollect : CommandEdge {
     private void Start()
     {
         var p=GameObject.Find("Parent");
-        pItemManager = PlayerItemManager.GetInstance();
+        pItemManager =p.GetComponentInChildren<PlayerItemManager>();
     }
     public override bool Check()
     { 

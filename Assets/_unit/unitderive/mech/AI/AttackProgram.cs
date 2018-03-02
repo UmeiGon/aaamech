@@ -4,13 +4,25 @@ using UnityEngine;
 
 public class AttackProgram : CommandProgram
 {
-    CharacterType targetType;
+    public int targetType=0;
     public override void ChangeTrigger()
     {
         mechCon.mode = MechController.Mode.Attack;
     }
     public override void Move()
     {
-        mechCon.unitList.NearUnitSearch(mechCon.myUnit,mechCon.unitList.enemyList.FindAll(x=>x.charaType==targetType));
+        if (mechCon.targetUnit == null)
+        {
+            if (System.Enum.IsDefined(typeof(CharacterType), targetType))
+            {
+                mechCon.targetUnit = mechCon.unitList.NearUnitSearch(mechCon.myUnit, mechCon.unitList.enemyList.FindAll(x => x.charaType == (CharacterType)targetType));
+            }
+            else
+            {//定義済みでないならenemylistから探す
+                mechCon.targetUnit = mechCon.unitList.NearUnitSearch(mechCon.myUnit, mechCon.unitList.enemyList);
+            }
+            
+        }
+ 
     }
 }
