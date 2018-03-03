@@ -643,8 +643,8 @@ MonoBehaviour:
   itemValue: 0
   radius: 0
   armyTag: 0
-  attack: 25
-  charaType: 0
+  attack: 10
+  charaType: 1
   selectBall: {fileID: 1213188890307604}
   mechCon: {fileID: 0}
 --- !u!114 &114479246274864120

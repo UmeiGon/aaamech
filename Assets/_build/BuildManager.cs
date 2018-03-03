@@ -51,7 +51,7 @@ public class BuildManager : MonoBehaviour
         {
             new BuildData(BuildID.NONE, "null", null),
             new BuildData(BuildID.Bridge, "BridgeUnit", new Dictionary<int, int>() { { (int)ItemID.Wood, 20 } }),
-            new BuildData(BuildID.Tower, "HealTower", new Dictionary<int, int>() { { (int)ItemID.Iron, 5 } }),
+            new BuildData(BuildID.Tower, "HealTower", new Dictionary<int, int>() { { (int)ItemID.Stone, 30 } }),
         };
         //todictionaryでidをkeyにしたdictionaryを作る
         buildDataTable = buildDataList.ToDictionary(d=>(int)d.id);

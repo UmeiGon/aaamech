@@ -508,11 +508,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectEffect: {fileID: 1680775049733128}
   maxHelth: 35
-  itemid: 0
-  itemValue: 0
+  itemid: 2
+  itemValue: 30
+  radius: 0
   armyTag: 1
   attack: 1
-  charaType: 1
+  charaType: 0
 --- !u!208 &208628626604057622
 NavMeshObstacle:
   m_ObjectHideFlags: 1

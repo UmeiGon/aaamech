@@ -14,7 +14,7 @@ public class HealTower : MonoBehaviour {
     {
         foreach(var i in unitLists.playerList)
         {
-            if (Vector3.Distance(i.transform.position, transform.position) <= 60.0f)
+            if (Vector3.Distance(i.transform.position, transform.position) <= 100.0f)
             {
                 i.Helth += healValue*Time.deltaTime;
             }
