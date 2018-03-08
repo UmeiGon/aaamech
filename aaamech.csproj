@@ -335,6 +335,7 @@
     <Compile Include="Assets\_unit\unitderive\BuildUnit.cs" />
     <Compile Include="Assets\_unit\unitderive\CharacterUnit.cs" />
     <Compile Include="Assets\_unit\unitderive\MaterialUnit.cs" />
+    <Compile Include="Assets\_unit\unitderive\mech\AI\AIPackage.cs" />
     <Compile Include="Assets\_unit\unitderive\mech\AI\AttackedChecker.cs" />
     <Compile Include="Assets\_unit\unitderive\mech\AI\AttackProgram.cs" />
     <Compile Include="Assets\_unit\unitderive\mech\AI\BuildProgram.cs" />

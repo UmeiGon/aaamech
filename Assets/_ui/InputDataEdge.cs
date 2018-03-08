@@ -10,33 +10,16 @@ public class InputDataEdge : MonoBehaviour
     UICommandManager comaMane;
     [SerializeField]
     List<GameObject> layOutList;
-    [SerializeField]
-    Dropdown checkerStreamDrop;
-    bool selectIsNext=true;
     public EdgeChecker SelectChecker
     {
         private set
         {
-            if (selectIsNext)
-            {
-                comaMane.SelectEdge.commandEdge.nextChecker = value;
-            }
-            else
-            {
-                comaMane.SelectEdge.commandEdge.preChecker = value;
-            }
+            comaMane.SelectEdge.commandEdge.checker = value;
         }
         get
         {
             if (comaMane.SelectEdge == null) return null;
-            if (selectIsNext)
-            {
-                return comaMane.SelectEdge.commandEdge.nextChecker;
-            }
-            else
-            {
-                return comaMane.SelectEdge.commandEdge.preChecker;
-            }
+            return comaMane.SelectEdge.commandEdge.checker;
         }
     }
     private void Start()
@@ -50,41 +33,14 @@ public class InputDataEdge : MonoBehaviour
         edgeTypeDropDown.ClearOptions();
         edgeTypeDropDown.AddOptions(slist);
         edgeTypeDropDown.onValueChanged.AddListener(EdgeTypeChanged);
-        checkerStreamDrop.onValueChanged.AddListener(CheckerStreamChanged);
         comaMane.edgeChanged += SelectCommandEdgeChanged;
-        List<string> nplist = new List<string>
-        {
-            "正方向",
-            "逆方向"
-        };
-        checkerStreamDrop.ClearOptions();
-        checkerStreamDrop.AddOptions(nplist);
-        checkerStreamDrop.value = 0;
         edgeTypeDropDown.interactable = false;
-        checkerStreamDrop.interactable = false;
-    }
-    void CheckerStreamChanged(int _num)
-    {
-        if (comaMane.SelectEdge == null) return;
-        switch (_num)
-        {
-            case 0:
-                selectIsNext = true;
-                Debug.Log("next");
-                break;
-            case 1:
-                selectIsNext = false;
-                Debug.Log("pre");
-                break;
-        }
-        if (SelectChecker != null) Debug.Log(SelectChecker.GetType());
-        ApplyUI();
     }
     //checkerの種類が変更されたら
     void EdgeTypeChanged(int num)
     {
         //nullか同じcheckertypeじゃなかったら変更。
-        if (SelectChecker == null|| EdgeDataBase.GetInstance().edgeDataList[num].type != SelectChecker.GetType())
+        if (SelectChecker == null || EdgeDataBase.GetInstance().edgeDataList[num].type != SelectChecker.GetType())
         {
             SelectChecker = EdgeDataBase.GetInstance().edgeDataList[num].GetCheckerInstance();
         }
@@ -96,7 +52,7 @@ public class InputDataEdge : MonoBehaviour
         {
             i.SetActive(false);
         }
-        if(comaMane.SelectEdge!=null)layOutList[edgeTypeDropDown.value].SetActive(true);
+        if (comaMane.SelectEdge != null) layOutList[edgeTypeDropDown.value].SetActive(true);
     }
     //selectcheckerの情報をUIに適用
     void ApplyUI()
@@ -117,13 +73,11 @@ public class InputDataEdge : MonoBehaviour
         //選択edgeがnullじゃない場合
         if (comaMane.SelectEdge != null)
         {
-            checkerStreamDrop.interactable = true;
             edgeTypeDropDown.interactable = true;
             ApplyUI();
         }
         else
         {
-            checkerStreamDrop.interactable = false;
             edgeTypeDropDown.interactable = false;
         }
 

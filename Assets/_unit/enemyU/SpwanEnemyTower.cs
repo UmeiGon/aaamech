@@ -27,11 +27,10 @@ public class SpwanEnemyTower : MonoBehaviour {
             for(int i=0;i<spwanList.Length;i++){
                 if (spwanList[i] == null)
                 {
-                    double d = ((float)i / (float)(maxSpwanValue)) * Math.PI * 2;
-
-                    Vector3 s_pos = new Vector3((float)Math.Cos(d)*spwanRange, 0, (float)Math.Sin(d) * spwanRange);
-                    spwanList[i]=Instantiate(spwanUnitPre, transform.position+s_pos, new Quaternion(), parentObj);
                     yield return new WaitForSeconds(spwanTime);
+                    double d = ((float)i / (float)(maxSpwanValue)) * Math.PI * 2;
+                    Vector3 s_pos = new Vector3((float)Math.Cos(d)*spwanRange, 0, (float)Math.Sin(d) * spwanRange);
+                    spwanList[i]=Instantiate(spwanUnitPre, transform.position+s_pos, new Quaternion(), parentObj); 
                 }
             }
             yield return null;

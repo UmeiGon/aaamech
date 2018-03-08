@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class CommandEdge
 {
-    public Transform holder;
+    public EdgeOnUI holder;
     public Command pre = null;
     public Command next = null;
-    public EdgeChecker nextChecker = null;
-    public EdgeChecker preChecker = null;
+    public EdgeChecker checker = null;
     public virtual bool Check() { return false; }
 
     public void DeleteMe()
@@ -72,14 +71,13 @@ public class CommandEdge
             if (pre.edges.Find(x => x.pre == c_node || x.next == c_node) == null)
             {
                 next = c_node;
-                c_node.edges.Add(this);
                 return true;
             }
         }
         else
         {
             next = c_node;
-            c_node.edges.Add(this);
+
             return true;
         }
         return false;

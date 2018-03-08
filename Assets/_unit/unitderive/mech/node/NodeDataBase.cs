@@ -50,7 +50,6 @@ public class NodeDataBase
     {
         nodeDataList = new List<NodeData>()
         {
-            new NodeData("無し",null),
             new NodeData("敵を探して攻撃",typeof(AttackProgram)),
             new NodeData("採集する",typeof(PickUpItemProgram)),
             new NodeData("建築する",typeof(BuildProgram)),

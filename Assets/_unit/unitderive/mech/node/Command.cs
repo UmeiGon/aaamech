@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Command
 {
-    public Transform holder;
+    public NodeOnUI holder;
     public CommandProgram program = null;
     public List<CommandEdge> edges = new List<CommandEdge>();
     public  void DeleteMe()

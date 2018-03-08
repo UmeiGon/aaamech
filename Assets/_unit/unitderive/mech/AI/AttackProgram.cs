@@ -13,6 +13,7 @@ public class AttackProgram : CommandProgram
     {
         if (mechCon.targetUnit == null)
         {
+            Debug.Log("a");
             if (System.Enum.IsDefined(typeof(CharacterType), targetType))
             {
                 mechCon.targetUnit = mechCon.unitList.NearUnitSearch(mechCon.myUnit, mechCon.unitList.enemyList.FindAll(x => x.charaType == (CharacterType)targetType));

@@ -83,11 +83,7 @@ public class MechController : MonoBehaviour
         }
         foreach (var i in aiTree.edgeList)
         {
-            if (i.nextChecker != null) i.nextChecker.mech = this;
-        }
-        foreach (var i in aiTree.edgeList)
-        {
-            if (i.preChecker != null) i.preChecker.mech = this;
+            if (i.checker != null) i.checker.mech = this;
         }
         nowCommand = aiTree.firstCommand;
     }
@@ -97,16 +93,10 @@ public class MechController : MonoBehaviour
         foreach (var i in nowCommand.edges)
         {
             //preが自分でnextがちゃんとある場合
-            if (i.pre== nowCommand && i.next != null &&i.nextChecker!=null &&i.nextChecker.Check())
+            if (i.pre== nowCommand && i.next != null &&i.checker!=null &&i.checker.Check())
             {
                 nowCommand = i.next;
                 changed = true;
-                break;
-            }
-            if (i.next == nowCommand && i.pre != null && i.preChecker!=null && i.preChecker.Check())
-            {
-                nowCommand = i.pre;
-                changed = true; 
                 break;
             }
         }
@@ -141,7 +131,11 @@ public class MechController : MonoBehaviour
                 if (dis <= (45.0f + targetUnit.radius))
                 {
                     //トリガー的処理
-                    if (!AttackEffect.isPlaying) AttackEffect.Play();
+                    if (!AttackEffect.isPlaying)
+                    {
+                        AttackEffect.Play();
+                        Debug.Log("attack");
+                    }
                     if (agent.isStopped) agent.isStopped = true;
                     Quaternion rot = Quaternion.LookRotation(targetUnit.transform.position - transform.position);
                     transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 20);
@@ -150,7 +144,11 @@ public class MechController : MonoBehaviour
                 }
                 else
                 {
-                    if (AttackEffect.isPlaying) AttackEffect.Stop();
+                    if (AttackEffect.isPlaying)
+                    {
+                        AttackEffect.Stop();
+                        Debug.Log("stop");
+                    }
                 }
             }
             else
