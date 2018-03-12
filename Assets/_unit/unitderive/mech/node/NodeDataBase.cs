@@ -32,6 +32,10 @@ public class NodeDataBase
         return inst;
     }
     public List<NodeData> nodeDataList;
+    public CommandProgram GetProgramInstance(int programId)
+    {
+        return nodeDataList[Mathf.Clamp(programId, 0, nodeDataList.Count - 1)].GetProgramInstance();
+    }
     public int FindTypeNumber(CommandProgram _command)
     {
         if (_command == null) return 0;

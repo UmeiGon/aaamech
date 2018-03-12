@@ -9,5 +9,4 @@ public class MechAITree {
     delegate void FirstChanged();
     FirstChanged firstChanged;
     public Command firstCommand;
-  
 }

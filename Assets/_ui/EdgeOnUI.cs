@@ -58,12 +58,13 @@ public class EdgeOnUI : MonoBehaviour, IPointerDownHandler
                 //preがあれば
                 if (commandEdge.pre != null)
                 {
-                    transform.localPosition = commandEdge.pre.holder.transform.localPosition + transform.right * 15.0f;
+                    
                     var dis = Vector3.Distance(commandEdge.next.holder.transform.localPosition, commandEdge.pre.holder.transform.localPosition);
                     transform.GetComponent<RectTransform>().sizeDelta = new Vector2(widthArrow, dis * (1.0f / transform.localScale.y));
                     //回す
                     var diff = (commandEdge.next.holder.transform.position - commandEdge.pre.holder.transform.position).normalized;
                     transform.rotation = Quaternion.FromToRotation(Vector3.up, diff);
+                    transform.localPosition = commandEdge.pre.holder.transform.localPosition + transform.right * 15.0f;
                 }
                 else if (selectFlag)
                 {

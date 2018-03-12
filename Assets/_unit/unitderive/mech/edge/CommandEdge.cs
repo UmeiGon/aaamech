@@ -40,8 +40,8 @@ public class CommandEdge
         //nextが既にある場合
         if (next != null)
         {
-            //同じ関係性のedgeが無ければpreに
-            if (next.edges.Find(x => x.pre == c_node || x.next == c_node) == null)
+            //既に同じ関係性のedgeが無ければpreに
+            if (next.edges.Find(x => x.pre == c_node) == null)
             {
                 pre = c_node;
                 c_node.edges.Add(this);
@@ -59,7 +59,7 @@ public class CommandEdge
     //追加に成功した場合真を返す
     public bool AddNextNode(Command c_node)
     {
-        //preが既にある場合は追加不可能
+        //nextが既にある場合は追加不可能
         if (next != null)
         {
             return false;
@@ -67,17 +67,18 @@ public class CommandEdge
         //preが既にある場合
         if (pre != null)
         {
-            //同じ関係性のedgeが無ければnextに
-            if (pre.edges.Find(x => x.pre == c_node || x.next == c_node) == null)
+            //既に同じ関係性のedgeが無ければnextに
+            if (pre.edges.Find(x => x.next == c_node) == null)
             {
                 next = c_node;
+                c_node.edges.Add(this);
                 return true;
             }
         }
         else
         {
             next = c_node;
-
+            c_node.edges.Add(this);
             return true;
         }
         return false;
