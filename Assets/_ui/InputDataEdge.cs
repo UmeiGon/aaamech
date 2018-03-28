@@ -42,7 +42,7 @@ public class InputDataEdge : MonoBehaviour
         //nullか同じcheckertypeじゃなかったら変更。
         if (SelectChecker == null || EdgeDataBase.GetInstance().edgeDataList[num].type != SelectChecker.GetType())
         {
-            SelectChecker = EdgeDataBase.GetInstance().edgeDataList[num].GetCheckerInstance();
+            SelectChecker = EdgeDataBase.GetInstance().edgeDataList[num].CreateCheckerInstance();
         }
         SetLayOut();
     }

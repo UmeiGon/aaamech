@@ -6,8 +6,7 @@ public class PlayerItemManager:MonoBehaviour
 {
 
     public Dictionary<int, ItemData> itemDataTable;
-    public delegate void ItemChangeTrigger();
-    public ItemChangeTrigger changeTrigger = null;
+    public Action<int> ItemQuantityChanged = null;
     PlayerItemManager()
     {
         itemDataTable = new Dictionary<int, ItemData>();
@@ -37,6 +36,6 @@ public class PlayerItemManager:MonoBehaviour
     //なんらかのアイテムの数が変更されるたび呼ばれる。
     void ItemChangeTriggerF(int i)
     {
-        if (changeTrigger != null) changeTrigger();
+        if (ItemQuantityChanged != null) ItemQuantityChanged(i);
     }
 }

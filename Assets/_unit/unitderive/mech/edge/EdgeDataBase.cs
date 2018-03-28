@@ -11,7 +11,7 @@ public class EdgeData
         edgeName = edge_name;
         type = _type;
     }
-    public EdgeChecker GetCheckerInstance()
+    public EdgeChecker CreateCheckerInstance()
     {
         if (type == null)
         {

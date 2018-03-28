@@ -32,7 +32,7 @@ public class NodeDataBase
         return inst;
     }
     public List<NodeData> nodeDataList;
-    public CommandProgram GetProgramInstance(int programId)
+    public CommandProgram CreateProgramInstance(int programId)
     {
         return nodeDataList[Mathf.Clamp(programId, 0, nodeDataList.Count - 1)].GetProgramInstance();
     }

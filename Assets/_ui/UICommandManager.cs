@@ -274,12 +274,14 @@ public class UICommandManager : MonoBehaviour
         var nodeui = c.GetComponent<NodeOnUI>();
         nodeui.commandNode.holder = nodeui;
         nodeui.cManager = this;
+
         //リミット付ける
         nodeui.startLimitPosition = new Vector3(0, 0, 0);
         nodeui.endLimitPosition = commandBackPanel.GetComponent<RectTransform>().sizeDelta;
         nodeui.startLimitPosition.y *= -1;
         nodeui.endLimitPosition.y *= -1;
-        nodeui.commandNode.program = NodeDataBase.GetInstance().GetProgramInstance(programID);
+
+        nodeui.commandNode.program = NodeDataBase.GetInstance().CreateProgramInstance(programID);
         nowTree.commandList.Add(nodeui.commandNode);
         //programのインスタンスをゲットして,メンバ変数も入力
         if ((nodeui.commandNode.program = NodeDataBase.GetInstance().nodeDataList[programID].GetProgramInstance()) != null && programValues != null)
@@ -373,7 +375,7 @@ public class UICommandManager : MonoBehaviour
         }
         var filedFlag = (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
         //checkerデータ入力
-        edge.commandEdge.checker = EdgeDataBase.GetInstance().edgeDataList[checkerID].GetCheckerInstance();
+        edge.commandEdge.checker = EdgeDataBase.GetInstance().edgeDataList[checkerID].CreateCheckerInstance();
         if (checkerValues != null)
         {
             var fields = edge.commandEdge.checker.GetType().GetFields(filedFlag);
