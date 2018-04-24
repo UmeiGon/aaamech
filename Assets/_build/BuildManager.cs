@@ -7,63 +7,61 @@ using System.Linq;
 //建造物を設置する時などに使うマネージャー
 public class BuildManager : MonoBehaviour
 { 
-    GameObject buildUnit = null;
-    
-    PlayerItemManager pItemManager;
+    ItemManager itemManager;
+    IEnumerator nowBuildRoutine;
+    GameObject buildUnitObj;
     private void Start()
     {
-        pItemManager = GameObject.Find("Parent").GetComponentInChildren<PlayerItemManager>();
-  
-
-        StartCoroutine(Building());
+        itemManager = CompornentUtility.FindCompornentOnScene<ItemManager>();
     }
     public bool CheckIfBuildable(BuildID num)
     {
-        if (BuildID.NONE == num) return false;
+       
         foreach (var i in BuildDataCabinet.Instance.buildDataTable[(int)num].consumptionItemData)
         {
-            if (pItemManager.itemDataTable[i.Key].Value < i.Value)
+            if (itemManager.itemDataTable[i.Key].Value < i.Value)
             {
                 return false;
             }
         }
         return true;
     }
-    void BuildStart(BuildID build_id)
+    public void BuildStart(BuildID build_id)
     {
-        buildUnit = null;
-        buildUnit = Instantiate(BuildDataCabinet.Instance.buildDataTable[(int)build_id].objPre, GameObject.Find("Parent").transform);
+        CancelBuild();
+        nowBuildRoutine = BuildRoutine(build_id);
+        StartCoroutine(nowBuildRoutine);
     }
-    IEnumerator Building()
+    public void CancelBuild()
     {
+        if (nowBuildRoutine != null) StopCoroutine(nowBuildRoutine);
+        Destroy(buildUnitObj);
+        nowBuildRoutine = null;
+    }
+    IEnumerator BuildRoutine(BuildID build_id)
+    {
+        buildUnitObj = Instantiate(BuildDataCabinet.Instance.buildDataTable[(int)build_id].ObjPre,CompornentUtility.TopParent.transform);
+        var buiderCon= BuildDataCabinet.Instance.buildDataTable[(int)build_id].CreateBuilderControllerInstance();
+        buiderCon.SetControlObject(buildUnitObj);
         while (true)
         {
-            Vector3 obj_pos = Vector3.zero;
-            if (buildNum != BuildID.NONE)
+
+            //positionのupdate設置可能ならtrueが入る
+            bool canInstallation = buiderCon.WrappedBuilderMoveUpdate();
+
+            //設置処理
+            if (Input.GetKeyDown(KeyCode.Mouse0)&& canInstallation)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1000.0f))
-                {
-                    obj_pos = hit.point;
-                }
+                buildUnitObj.GetComponent<BuilderUnit>().enabled = true;
+                itemManager.UsingItem(BuildDataCabinet.Instance.buildDataTable[(int)build_id].consumptionItemData);
+                buildUnitObj = null;
+
+                buiderCon.InstalledBuilderObject();
+                break;
             }
-            switch (buildNum)
+            else if(Input.GetKeyDown(KeyCode.Mouse1))
             {
-                case BuildID.NONE:
-                    break;
-                case BuildID.Bridge:
-                case BuildID.Tower:
-                    buildUnit.transform.position = obj_pos;
-                    if (Input.GetKeyDown(KeyCode.Mouse0))
-                    {
-                        buildUnit.GetComponent<BuildUnit>().enabled = true;
-                        pItemManager.UsingItem(buildDataTable[(int)buildNum].consumptionItemData);
-                        buildNum = BuildID.NONE;
-                    }
-                    break;
-                default:
-                    break;
+                CancelBuild();
             }
             yield return null;
         }

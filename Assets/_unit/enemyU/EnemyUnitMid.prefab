@@ -1383,9 +1383,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8added6fb2d9abc4ea2727b279b4f660, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sensorRange: 120
-  homingMAxRange: 200
-  AttackRange: 45
+  sensorRange: 80
+  chaseMaxRange: 120
   attackEffect: {fileID: 198055721426873252}
 --- !u!114 &114167771082705640
 MonoBehaviour:
@@ -1553,10 +1552,11 @@ MonoBehaviour:
   maxHelth: 30
   itemid: 2
   itemValue: 2
-  radius: 0
+  radius: 15
   armyTag: 1
   attack: 5
   charaType: 1
+  attackRange: 25
 --- !u!195 &195024402165036154
 NavMeshAgent:
   m_ObjectHideFlags: 1

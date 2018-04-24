@@ -1,28 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 //全てのユニットはUnitを継承する。
 //ユニット自体に動きなどを書かない、あくまで識別のためのクラス
-public class Unit : MonoBehaviour
+public abstract class  Unit : MonoBehaviour
 {
     private float helth;
-    private bool lifeZeroDeathFlag=true;
+    private Action deathActions;
+    private Action<Unit> ReceivedDamageAction;
     public GameObject selectEffect;
     public float maxHelth;
-    public delegate void GotDamage(Unit _unit);
-    public GotDamage gotDamage;
     public ItemID itemid = 0;
     public int itemValue = 0;
-    public float radius = 0;
+    public float radius = 5.0f;
     public enum Army
     {
-        p1,p2,p3,p4,Neutral
+        p1, p2, p3, p4, Neutral
     }
     public Army armyTag;
     public float Helth
     {
-        set { if (value > maxHelth) helth = maxHelth;
+        set
+        {
+            if (value > maxHelth)
+            {
+                helth = maxHelth;
+            }
             else
             {
                 helth = value;
@@ -30,45 +35,63 @@ public class Unit : MonoBehaviour
         }
         get { return helth; }
     }
-    //unitからunitにダメージを与える時の関数
-    public void SetDamage(float damage,Unit _unit)
+    public void AddReceivedDamageAction(Action<Unit> received_acition)
     {
-        Helth -= damage;
-       if(gotDamage != null)gotDamage(_unit);
+        ReceivedDamageAction += received_acition;
+    }
+    public void AddDeathAction(Action _action)
+    {
+        deathActions += _action;
+    }
+    //unitからunitにダメージを与える時の関数
+    public void SetDamage(float _damage, Unit _unit)
+    {
+        Helth -= _damage;
+        if (ReceivedDamageAction != null) ReceivedDamageAction(_unit);
     }
     public float attack = 1.0f;
-    public virtual void Death() {
-        var p = GameObject.Find("Parent");
-        p.GetComponentInChildren<UnitLists>().DeleteUnit(this);
+    void DiePraparation()
+    {
+        CompornentUtility.FindCompornentOnScene<UnitListCabinet>().DeleteUnit(this);
         if (itemValue > 0)
         {
-            p.GetComponentInChildren<PlayerItemManager>().itemDataTable[(int)itemid].Value += itemValue;
+            CompornentUtility.FindCompornentOnScene<ItemManager>().itemDataTable[(int)itemid].Value += itemValue;
         }
-        Destroy(gameObject);
     }
     protected void LifeZeroDeath()
     {
-        if (lifeZeroDeathFlag&&helth <= 0)
+        if (helth <= 0)
         {
-            Death();
+            deathActions();
+            Destroy(gameObject);
         }
     }
-    virtual protected void Init()
-    {  
+    virtual protected void Init() { }
+    private void BaseInit()
+    {
         helth = maxHelth;
-        GameObject.Find("Parent").GetComponentInChildren<UnitLists>().AddUnit(this);
+        AddDeathAction(DiePraparation);
+        CompornentUtility.FindCompornentOnScene<UnitListCabinet>().AddUnit(this);
         StartCoroutine(UnitUpdate());
     }
     IEnumerator UnitUpdate()
     {
         while (true)
         {
+           
             LifeZeroDeath();
             yield return null;
         }
     }
-    private void Start()
+    private void OnDrawGizmos()
     {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position, radius);
+    }
+
+    protected void Start()
+    {
+        BaseInit();
         Init();
     }
 }

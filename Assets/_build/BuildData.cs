@@ -4,18 +4,40 @@ using UnityEngine;
 
 public class BuildData
 {
-    BuildID buildId;
+    public BuildID BuildId
+    {
+        private set;
+        get;
+    }
+    public string BuildName
+    {
+        private set;
+        get;
+    }
     //key...itemID,value...個数
     public Dictionary<int, int> consumptionItemData = null;
-    public BuildData(BuildID build_id,Dictionary<int, int> consumption_items,BuilderSuperClass _builder)
+    System.Type builderType;
+    public GameObject ObjPre
     {
-        buildId = build_id;
-        consumptionItemData = consumption_items;
-        builder = _builder;
+        get;
+        private set;
     }
-    BuilderSuperClass builder;
-    void BuildingUpdate()
+    public static BuildData CreateBuildData<BuilderType>(BuildID build_id, string build_name, Dictionary<int, int> consumption_items)
+        where BuilderType : BuilderControllerSuperClass, new()
     {
-        builder.BuilderUpdate();
+        var bd = new BuildData()
+        {
+            BuildId = build_id,
+            BuildName = build_name,
+            consumptionItemData = consumption_items,
+            ObjPre = Resources.Load(build_name) as GameObject,
+        };
+        bd.builderType = typeof(BuilderType);
+        return bd;
     }
+    public BuilderControllerSuperClass CreateBuilderControllerInstance()
+    {
+        return (BuilderControllerSuperClass)System.Activator.CreateInstance(builderType);
+    }
+    private BuildData() { }
 }

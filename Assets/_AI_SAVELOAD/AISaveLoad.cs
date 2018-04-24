@@ -21,11 +21,12 @@ public class AISaveLoad
     public void SaveAITree(AIPackage ai_pack, string file_name)
     {
         StreamWriter sw = new StreamWriter(Application.persistentDataPath + file_name + "saveData" + ".csv", false, Encoding.GetEncoding("Shift_JIS"));
+        Debug.Log(file_name+"でセーブ");
         var filedFlag = (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
         //firstcommand
         sw.WriteLine(ai_pack.firstCommandID);
-        sw.WriteLine("commmand");
-        foreach (var i in ai_pack.commandDataList)
+        sw.WriteLine("node");
+        foreach (var i in ai_pack.nodeDataList)
         {
             List<string> slist = new List<string> { i.commandNumber.ToString(), i.localPos.x.ToString(), i.localPos.y.ToString(), };
             var str2 = string.Join(",", slist.ToArray());
@@ -62,13 +63,22 @@ public class AISaveLoad
     }
     public AIPackage LoadAITree(string file_name)
     {
-        StreamReader sr = new StreamReader(Application.persistentDataPath + file_name + "saveData" + ".csv", Encoding.GetEncoding("Shift_JIS"));
-        if (sr == null)
+        StreamReader sr = null;
+        try
         {
-            Debug.Log("ロード失敗");
+            sr = new StreamReader(Application.persistentDataPath + file_name + "saveData" + ".csv",Encoding.GetEncoding("Shift_JIS"));
+        }
+        catch (FileNotFoundException e)
+        {
+            Debug.Log("ファイルがない");
             return null;
         }
-        List<CommandSaveData> comaData = new List<CommandSaveData>();
+        catch (DirectoryNotFoundException e)
+        {
+            Debug.Log("ディレクトリがない");
+            return null;
+        }
+        List<NodeSaveData> comaData = new List<NodeSaveData>();
         string line;
         int firstId = int.Parse(sr.ReadLine());
         sr.ReadLine();
@@ -77,7 +87,7 @@ public class AISaveLoad
         {
             if (line == "edge") break;
             string[] comaArray = line.Split(',');
-            var c = new CommandSaveData()
+            var c = new NodeSaveData()
             {
                 commandNumber = int.Parse(comaArray[0]),
                 localPos = new Vector2(float.Parse(comaArray[1]), float.Parse(comaArray[2])),
@@ -121,7 +131,7 @@ public class AISaveLoad
         return new AIPackage()
         {
             edgeDataList = edgeData,
-            commandDataList = comaData,
+            nodeDataList = comaData,
             firstCommandID = firstId,
         };
     }

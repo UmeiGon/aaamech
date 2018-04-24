@@ -7,10 +7,14 @@ public class ItemText : MonoBehaviour {
     public ItemID itemID;
     [SerializeField]
     Text consumptionText;
+    [SerializeField]
     Text quantityText;
+
     private void Start()
     {
-        quantityText = GetComponent<Text>();
+        var playerItemManager = CompornentUtility.FindCompornentOnScene<ItemManager>();
+        playerItemManager.itemDataTable[(int)itemID].AddValueChangedTrigger(TextReload);
+        TextReload(playerItemManager.itemDataTable[(int)itemID].Value);
     }
     public void TextReload(int _value)
     {

@@ -32,3 +32,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/ClearScene.unity
     guid: 7ae9895099c999d4e8e73a0b3f8c9957
+  - enabled: 1
+    path: Assets/_scene/CanvasAndManager.unity
+    guid: 643651210e6b33c4da646b3cee9c56f6

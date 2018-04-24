@@ -1,48 +1,46 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
-public class NodeData
-{
-    public string nodeName;
-    public System.Type type;
-    public NodeData(string node_name, System.Type _type)
-    {
-        nodeName = node_name;
-        type = _type;
-    }
-    public CommandProgram GetProgramInstance()
-    {
-        if (type == null)
-        {
-            return null;
-        }
-        return (CommandProgram)System.Activator.CreateInstance(type);
-    }
-}
+
 public class NodeDataBase
 {
-    static NodeDataBase inst;
+    static NodeDataBase instance;
     public static NodeDataBase GetInstance()
     {
-        if (inst == null)
+        if (instance == null)
         {
-            inst = new NodeDataBase();
+            instance = new NodeDataBase();
         }
-        return inst;
+        return instance;
     }
-    public List<NodeData> nodeDataList;
-    public CommandProgram CreateProgramInstance(int programId)
+    public List<NodeData> NodeDataList
     {
-        return nodeDataList[Mathf.Clamp(programId, 0, nodeDataList.Count - 1)].GetProgramInstance();
+        get;
+        private set;
     }
-    public int FindTypeNumber(CommandProgram _command)
+    public Dictionary<System.Type,NodeData> NodeDataDictionary
+    {
+        get;
+        private set;
+    }
+    public NodeData FindNodeData<T>()
+        where T : NodeActivity
+    {
+        return NodeDataDictionary[typeof(T)];
+    }
+    public NodeActivity CreateAcitivityInstance(int _acitivityId)
+    {
+        return NodeDataList[Mathf.Clamp(_acitivityId, 0, NodeDataList.Count - 1)].GetActivityInstance();
+    }
+    public int FindTypeNumber(NodeActivity _command)
     {
         if (_command == null) return 0;
         int n = 0;
-        foreach (var i in nodeDataList)
+        foreach (var i in NodeDataList)
         {
-            if (i.type==_command.GetType())
+            if (i.ActivityType == _command.GetType())
             {
                 return n;
             }
@@ -52,12 +50,13 @@ public class NodeDataBase
     }
     NodeDataBase()
     {
-        nodeDataList = new List<NodeData>()
+        NodeDataList = new List<NodeData>()
         {
-            new NodeData("敵を探して攻撃",typeof(AttackProgram)),
-            new NodeData("採集する",typeof(PickUpItemProgram)),
-            new NodeData("建築する",typeof(BuildProgram)),
-            new NodeData("ホームに帰る",typeof(ReturnBaseProgram)),
+           NodeData.CreateNodeData<AttackNodeActivity>("敵攻撃","指定の敵を攻撃"),
+           NodeData.CreateNodeData<PickUpItemNodeActivity>("素材収集","指定した素材を収集"),
+           NodeData.CreateNodeData<BuildNodeActivity>("建築","一番近い建物を建築する"),
+           NodeData.CreateNodeData<ReturnBaseNodeActivity>("帰還","一番近いホームに帰る"),
         };
+        NodeDataDictionary = NodeDataList.ToDictionary(x=>x.ActivityType);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 public enum BuildID
 {
-    Bridge = 0,
+    Bridge,
     Tower,
 }
 

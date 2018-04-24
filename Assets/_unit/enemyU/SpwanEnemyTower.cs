@@ -16,7 +16,7 @@ public class SpwanEnemyTower : MonoBehaviour {
     private void Start()
     {
         spwanList = new GameObject[maxSpwanValue];
-        parentObj = GameObject.Find("Parent").transform;
+        parentObj = CompornentUtility.TopParent.transform;
         StartCoroutine(SpwanUpdate());
     }
     IEnumerator SpwanUpdate()

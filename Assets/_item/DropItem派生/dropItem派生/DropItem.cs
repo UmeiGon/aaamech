@@ -5,7 +5,7 @@ using UnityEngine;
 public class DropItem : MonoBehaviour {
     public int dropValue = 1;
     public float pickUpDelay = 1.0f;
-    private PlayerItemManager pItemMane;
+    private ItemManager pItemMane;
     private GameObject pare;
  
     public bool IsLife { private set; get; }
@@ -31,7 +31,6 @@ public class DropItem : MonoBehaviour {
     virtual protected void Init()
     {
         pare = GameObject.Find("Parent");
-        pare.GetComponentInChildren<DropItemManager>().dropItemList.Add(this);
     }
     public  void Picked() {
         if (pickUpDelay > 0)return;

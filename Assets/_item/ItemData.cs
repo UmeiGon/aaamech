@@ -1,13 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System;
 
 public class ItemData{
     int value=0;
-    public delegate void valueChangeTrigger(int _value);
     //基本Awakeでこのデリゲートに追加
-    public valueChangeTrigger valueChanged;
+    Action<int> valueChanged;
+    public void AddValueChangedTrigger(Action<int> func)
+    {
+        valueChanged += func;
+    }
     public int Value
     {
         set

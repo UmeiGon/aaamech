@@ -11,15 +11,7 @@ public class ItemTextManager : MonoBehaviour
     {
         //itemtextのlistを作成
         List<ItemText> iTextList=new List<ItemText>();
-        CompornentUtility.GetTopParent.GetComponentsInChildren(iTextList);
-
-        //アイテムの個数が更新された時にテキストも更新するようにする。
-        var pItemManager = CompornentUtility.FindCompornentOnScene<PlayerItemManager>();
-        foreach (var i in iTextList)
-        {
-            pItemManager.ItemQuantityChanged += i.TextReload;
-        }
-        
+        CompornentUtility.TopParent.GetComponentsInChildren(iTextList);
         //dictionary作成
         itemTextHashData=iTextList.ToDictionary(x=>(int)x.itemID);
     }

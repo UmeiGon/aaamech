@@ -3,14 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameClearManager : MonoBehaviour {
-   
-   public Unit ClearUnit;
-    private void Update()
+public class GameClearManager : MonoBehaviour
+{
+
+    public Unit ClearUnit;
+    private void Start()
     {
-        if (ClearUnit == null)
+        if (ClearUnit)
         {
-            Clear();
+            StartCoroutine(ClearCheckRoutine());
+        }
+    }
+    IEnumerator ClearCheckRoutine()
+    {
+        while (true)
+        {
+            if (ClearUnit == null)
+            {
+                Clear();
+            }
+            yield return null;
         }
     }
     void Clear()

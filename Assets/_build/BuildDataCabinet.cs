@@ -24,10 +24,10 @@ public class BuildDataCabinet
     {
         var buildDataList = new List<BuildData>
         {
-            new BuildData(BuildID.Bridge, "BridgeUnit", new Dictionary<int, int>() { { (int)ItemID.Wood, 20 } }),
-            new BuildData(BuildID.Tower, "HealTower", new Dictionary<int, int>() { { (int)ItemID.Stone, 30 } }),
+            BuildData.CreateBuildData<RaycastBuilderController>(BuildID.Bridge,"Bridge",new Dictionary<int,int>{{(int)ItemID.Wood,20 } }),
+            BuildData.CreateBuildData<LimitedPositonBuilderController>(BuildID.Tower,"HealTower",new Dictionary<int,int>{{(int)ItemID.Stone,30 } }),
         };
         //todictionaryでidをkeyにしたdictionaryを作る
-        buildDataTable = buildDataList.ToDictionary(d => (int)d.id);
+        buildDataTable = buildDataList.ToDictionary(d => (int)d.BuildId);
     }
 }

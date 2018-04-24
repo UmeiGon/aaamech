@@ -5,8 +5,8 @@ using UnityEngine;
 public class CommandEdge
 {
     public EdgeOnUI holder;
-    public Command pre = null;
-    public Command next = null;
+    public CommandNode pre = null;
+    public CommandNode next = null;
     public EdgeChecker checker = null;
     public virtual bool Check() { return false; }
 
@@ -30,7 +30,7 @@ public class CommandEdge
         }
     }
     //追加に成功した場合真を返す
-    public bool AddPreNode(Command c_node)
+    public bool AddPreNode(CommandNode c_node)
     {
         //preが既にある場合は追加不可能
         if (pre != null)
@@ -57,28 +57,26 @@ public class CommandEdge
         return false;
     }
     //追加に成功した場合真を返す
-    public bool AddNextNode(Command c_node)
+    public bool AddNextNode(CommandNode c_node)
     {
         //nextが既にある場合は追加不可能
         if (next != null)
         {
             return false;
         }
-        //preが既にある場合
+
         if (pre != null)
         {
             //既に同じ関係性のedgeが無ければnextに
             if (pre.edges.Find(x => x.next == c_node) == null)
             {
                 next = c_node;
-                c_node.edges.Add(this);
                 return true;
             }
         }
         else
         {
             next = c_node;
-            c_node.edges.Add(this);
             return true;
         }
         return false;

@@ -6,7 +6,7 @@ public class BossController : MonoBehaviour {
 
     NavMeshAgent agent;
     CharacterUnit myUnit;
-    UnitLists unitlists;
+    UnitListCabinet unitlists;
     [SerializeField]
     float sensorRange;
     [SerializeField]
@@ -24,7 +24,7 @@ public class BossController : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
         startPos = transform.position;
         var p = GameObject.Find("Parent");
-        unitlists = p.GetComponentInChildren<UnitLists>();
+        unitlists = p.GetComponentInChildren<UnitListCabinet>();
         //StartCoroutine(EnemyUpdate());
     }
     private void Update()
@@ -46,7 +46,7 @@ public class BossController : MonoBehaviour {
             var diff = targetUnit.transform.position - transform.position;
             diff.y = 0;
             //頭割りダメージ
-            var tLists=unitlists.playerList.FindAll(x=>Vector3.Distance(x.transform.position,transform.position)<= AttackRange+30);
+            var tLists=unitlists.PlayerList.FindAll(x=>Vector3.Distance(x.transform.position,transform.position)<= AttackRange+30);
             float damage = myUnit.attack / tLists.Count;
             foreach (var i in tLists)
             {
@@ -81,7 +81,7 @@ public class BossController : MonoBehaviour {
     {
         if (targetUnit == null)
         {
-            var u = unitlists.NearUnitSearch(myUnit, unitlists.playerList);
+            var u = unitlists.SearchNearUnit(myUnit, unitlists.PlayerList);
             //一番近いunitがsesorrange以下だった場合
             if (u != null && Vector3.Distance(transform.position, u.transform.position) <= sensorRange)
             {

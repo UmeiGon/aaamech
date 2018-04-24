@@ -641,10 +641,11 @@ MonoBehaviour:
   maxHelth: 40
   itemid: 0
   itemValue: 0
-  radius: 0
+  radius: 20
   armyTag: 0
   attack: 10
   charaType: 1
+  attackRange: 45
   selectBall: {fileID: 1213188890307604}
   mechCon: {fileID: 0}
 --- !u!114 &114479246274864120
