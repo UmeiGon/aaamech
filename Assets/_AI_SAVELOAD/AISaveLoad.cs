@@ -71,12 +71,11 @@ public class AISaveLoad
         catch (FileNotFoundException e)
         {
             Debug.Log("ファイルがない");
-            return null;
         }
         catch (DirectoryNotFoundException e)
         {
             Debug.Log("ディレクトリがない");
-            return null;
+           
         }
         List<NodeSaveData> comaData = new List<NodeSaveData>();
         string line;

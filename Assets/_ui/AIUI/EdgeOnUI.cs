@@ -3,31 +3,39 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+
 public class EdgeOnUI : MonoBehaviour, IPointerDownHandler
 {
-    public CommandEdge commandEdge;
-    public AITreeGenerator aITreeGenerator;
-    bool selectFlag = false;
-    EdgeOnUI()
+    CommandEdge commandEdge;
+    Vector3 preHeadPositon;
+    public CommandEdge CommandEdge
     {
-        commandEdge = new CommandEdge
+        get { return commandEdge; }
+        set
         {
-            holder = this
-        };
+            commandEdge = value;
+            if(commandEdge!=null)commandEdge.holder = this;
+        }
     }
+    public AITreeGenerator aITreeGenerator;
+    bool isSelected = false;
+    RectTransform rectTransform;
     public void SelectTrigger()
     {
         GetComponent<Animator>().SetBool("selectFlag", true);
-        selectFlag = true;
+        isSelected = true;
     }
-    public void DeleteEdge()
+    public void Sucide()
     {
-        commandEdge.DeleteMe();
+        CommandEdge.ReferenceRemoving();
+        CommandEdge.holder = null;
+        CommandEdge = null;
+        Destroy(gameObject);
     }
     public void UnSelectTrigger()
     {
         GetComponent<Animator>().SetBool("selectFlag", false);
-        selectFlag = false;
+        isSelected = false;
     }
 
     public void OnPointerDown(PointerEventData e)
@@ -37,59 +45,54 @@ public class EdgeOnUI : MonoBehaviour, IPointerDownHandler
             aITreeGenerator.SelectEdge = this;
         }
     }
-    void Update()
+    private void Start()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
+    void SettingPosition(Vector3 origin_pos, Vector3 head_pos)
     {
         float widthArrow = 25.0f;
-        if (commandEdge.next != null)
-        {
-            //preがあれば
-            if (commandEdge.pre != null)
-            {
 
-                var dis = Vector3.Distance(commandEdge.next.holder.transform.localPosition, commandEdge.pre.holder.transform.localPosition);
-                transform.GetComponent<RectTransform>().sizeDelta = new Vector2(widthArrow, dis * (1.0f / transform.localScale.y));
-                //回す
-                var diff = (commandEdge.next.holder.transform.position - commandEdge.pre.holder.transform.position).normalized;
-                transform.rotation = Quaternion.FromToRotation(Vector3.up, diff);
-                transform.localPosition = commandEdge.pre.holder.transform.localPosition + transform.right * 15.0f;
-            }
-            else if (selectFlag)
-            {
-                transform.position = Input.mousePosition;
-                var dis = Vector3.Distance(commandEdge.next.holder.transform.localPosition, transform.localPosition);
-                transform.GetComponent<RectTransform>().sizeDelta = new Vector2(widthArrow, dis * (1.0f / transform.localScale.y));
-                //回す
-                var diff = (commandEdge.next.holder.transform.position - transform.position).normalized;
-                transform.rotation = Quaternion.FromToRotation(Vector3.up, diff);
-            }
+        //2点間の距離を取り、UIのサイズを設定
+        var dis = Vector3.Distance(head_pos, origin_pos);
+        rectTransform.sizeDelta = new Vector2(widthArrow, dis * (1.0f / transform.lossyScale.y));
+
+        //pre->nextのベクトルを取り、UIの角度を設定
+        var diff = (head_pos - origin_pos).normalized;
+        transform.rotation = Quaternion.FromToRotation(Vector3.up, diff);
+
+        //エッジが被らないようにするために、UIを横にずらす
+        transform.position = origin_pos + transform.right * 15.0f;
+
+        preHeadPositon=head_pos;
+    }
+    void Update()
+    {
+        Vector3 origin=Vector3.zero,head=Vector3.zero;
+        var mouse = Input.mousePosition;
+        if (CommandEdge.next != null)
+        {
+            head = CommandEdge.next.holder.transform.position;
         }
         else
         {
-            //mousepos追従
-            if (selectFlag)
+            if (isSelected)
             {
-                var m_pos = Input.mousePosition;
-                var A = (m_pos - transform.position);
-                A.x *= 1.0f / transform.lossyScale.x;
-                A.y *= 1.0f / transform.lossyScale.y;
-                var dis = A.magnitude;
-                var diff = (m_pos - transform.position).normalized;
-                //diff=Vector3.Normalize(diff);
-                transform.GetComponent<RectTransform>().sizeDelta = new Vector2(widthArrow, dis - 1.0f);
-                diff.z = 0;
-                transform.rotation = Quaternion.FromToRotation(Vector3.up, diff);
-                if (commandEdge.pre != null)
-                {
-                    transform.localPosition = commandEdge.pre.holder.transform.localPosition;
-                }
-                else
-                {
-                    transform.position = Input.mousePosition;
-                }
-
+                head = mouse;
             }
         }
-
+        if (commandEdge.pre!=null)
+        {
+            origin = commandEdge.pre.holder.transform.position;
+        }
+        else
+        {
+            if (isSelected)
+            {
+                origin = mouse;
+            }
+        }
+        SettingPosition(origin, head);
     }
 
 }

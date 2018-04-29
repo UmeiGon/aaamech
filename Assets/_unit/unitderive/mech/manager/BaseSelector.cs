@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseSelector : MonoBehaviour {
+    MechGenerator mechGenerator;
     private void Start()
     {
         mechGenerator = CompornentUtility.FindCompornentOnScene<MechGenerator>();
         StartCoroutine(SelectRoutine());     
     }
-    MechGenerator mechGenerator;
     IEnumerator SelectRoutine()
     {
         while (true)
@@ -22,7 +22,8 @@ public class BaseSelector : MonoBehaviour {
                     BaseUnit baseUnit = hit.transform.GetComponent<BaseUnit>();
                     if (baseUnit)
                     {
-                        mechGenerator.selectBase = baseUnit;
+
+                        mechGenerator.SelectBase = baseUnit;
                     }
                 }
             }

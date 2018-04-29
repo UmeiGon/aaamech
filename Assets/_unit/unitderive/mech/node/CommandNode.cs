@@ -6,15 +6,22 @@ public class CommandNode
 {
     public NodeOnUI holder;
     public NodeActivity activity = null;
-    public List<CommandEdge> edges = new List<CommandEdge>();
-    public  void DeleteMe()
+    public List<CommandEdge> NextStreamEdges = new List<CommandEdge>();
+    public List<CommandEdge> PreStreamEdges = new List<CommandEdge>();
+    public void ReferenceRemoving()
     {
         //自分を参照している全てのedgeのthisに対してnullを代入
-        foreach (var i in edges)
+        foreach (var i in NextStreamEdges)
         {
             if (i.pre == this) i.pre = null;
             if (i.next == this) i.next = null;
         }
-        edges.Clear();
+        foreach (var i in PreStreamEdges)
+        {
+            if (i.pre == this) i.pre = null;
+            if (i.next == this) i.next = null;
+        }
+        NextStreamEdges.Clear();
+        PreStreamEdges.Clear();
     }
 }

@@ -7,13 +7,22 @@ public class NodeOnUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 {
     Vector3 offSet;
     [SerializeField]
-    UnityEngine.UI.Text nodeNameText;
+    Text nodeNameText;
     public Vector3 startLimitPosition;
     public Vector3 endLimitPosition;
     public AITreeGenerator aITreeGenerator;
-    public CommandNode commandNode = new CommandNode();
+    CommandNode commandNode;
+    public CommandNode CommandNode
+    {
+        get { return commandNode; }
+        set
+        {
+            commandNode = value;
+            if(commandNode!=null)commandNode.holder = this;
+        }
+    }
     private Image NodeImage;
-    public  Color NodeColor
+    public Color NodeColor
     {
         get
         {
@@ -30,27 +39,20 @@ public class NodeOnUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     {
         if (!NodeImage) NodeImage = GetComponent<Image>();
     }
-    public void DeleteNode()
+    public void Sucide()
     {
-        commandNode.DeleteMe();
+        CommandNode.ReferenceRemoving();
+        CommandNode.holder = null;
+        CommandNode = null;
+        Destroy(gameObject);
     }
     void NameApplyText(string _name)
     {
         nodeNameText.text = _name;
     }
-    private void Start()
+    private void Update()
     {
-        StartCoroutine(TextApply());
-    }
-    IEnumerator TextApply()
-    {
-        while (true)
-        {
-
-            nodeNameText.text = "" + NodeDataBase.GetInstance().NodeDataList[NodeDataBase.GetInstance().FindTypeNumber(commandNode.activity)].NodeName;
-
-            yield return null;
-        }
+        nodeNameText.text = "" + NodeDataBase.GetInstance().NodeDataList[NodeDataBase.GetInstance().FindTypeNumber(CommandNode.activity)].NodeName;
     }
     public void SelectTrigger()
     {

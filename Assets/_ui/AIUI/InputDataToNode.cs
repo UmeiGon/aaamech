@@ -12,7 +12,7 @@ public class InputDataToNode : MonoBehaviour {
     public NodeActivity SelectActivity{
         private set
         {
-            if(AiGenerator.SelectNode)AiGenerator.SelectNode.commandNode.activity = value;
+            if(AiGenerator.SelectNode)AiGenerator.SelectNode.CommandNode.activity = value;
         }
         get
         {
@@ -20,7 +20,7 @@ public class InputDataToNode : MonoBehaviour {
             {
                 return null;
             }
-            return (AiGenerator.SelectNode)?AiGenerator.SelectNode.commandNode.activity:null;
+            return (AiGenerator.SelectNode)?AiGenerator.SelectNode.CommandNode.activity:null;
         }
     }
     public void AddNodeLayOut(string node_name,ActivityInput activity_input)

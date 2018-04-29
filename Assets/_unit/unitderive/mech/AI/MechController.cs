@@ -31,7 +31,6 @@ public class MechController : MonoBehaviour
         navObs = GetComponent<NavMeshObstacle>();
         unitList = CompornentUtility.FindCompornentOnScene<UnitListCabinet>();
         currentCommand = aiTree.firstNode;
-        Debug.Log("ssa");
         if (aiTree != null)
         {
             if (currentCommand.activity != null) currentCommand.activity.ChangeTrigger();
@@ -81,7 +80,6 @@ public class MechController : MonoBehaviour
         {
             if (i.checker != null) i.checker.MechCon = this;
         }
-        Debug.Log("koi");
     }
     IEnumerator MoveRoutine()
     {
@@ -112,7 +110,7 @@ public class MechController : MonoBehaviour
     void AIUpdate()
     {
         bool changed = false;
-        foreach (var i in currentCommand.edges)
+        foreach (var i in currentCommand.NextStreamEdges)
         {
             if (i.checker.Check())
             {

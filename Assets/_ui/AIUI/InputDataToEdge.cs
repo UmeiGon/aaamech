@@ -15,7 +15,7 @@ public class InputDataToEdge : MonoBehaviour
     {
         private set
         {
-            aiGenerator.SelectEdge.commandEdge.checker = value;
+            aiGenerator.SelectEdge.CommandEdge.checker = value;
         }
         get
         {
@@ -23,7 +23,7 @@ public class InputDataToEdge : MonoBehaviour
             {
                 return null;
             }
-           return(aiGenerator.SelectEdge)?aiGenerator.SelectEdge.commandEdge.checker:null;
+           return(aiGenerator.SelectEdge)?aiGenerator.SelectEdge.CommandEdge.checker:null;
         }
     }
     public void AddEdgeLayout(string edge_name,CheckerInput checker_input)

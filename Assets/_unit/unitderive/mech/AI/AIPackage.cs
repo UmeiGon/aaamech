@@ -20,7 +20,7 @@ public class EdgeSaveData
 public class AIPackage
 {
 
-    public static AIPackage TreeToPackage(MechAITree _tree)
+    public static AIPackage AITreeConvertToPackage(MechAITree _tree)
     {
         AIPackage retPack = new AIPackage();
         var filedFlag = (BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);

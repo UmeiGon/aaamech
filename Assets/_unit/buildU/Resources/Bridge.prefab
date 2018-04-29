@@ -431,7 +431,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myUnit: {fileID: 114545192591458264}
-  buildObject: {fileID: 1940100512609074}
+  buildObject: {fileID: 1580699831636674, guid: efe1cb54e95790a42b36359d92ee4189,
+    type: 2}
   EmptyBuiderObj: {fileID: 1206536960287528}
 --- !u!114 &114545192591458264
 MonoBehaviour:
@@ -444,7 +445,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9d7db3b8ab0d14448859cebb0719deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectEffect: {fileID: 0}
   maxHelth: 10
   itemid: 0
   itemValue: 0

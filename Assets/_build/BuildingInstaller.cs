@@ -21,7 +21,7 @@ public class BuildingInstaller : MonoBehaviour {
     }
     public void PopBuildObj()
     {
-        buildObject.SetActive(true);
-        buildObject.transform.parent = CompornentUtility.TopParent.transform;
+        if (!buildObject) return;
+        Instantiate(buildObject,transform.position,transform.rotation,CompornentUtility.TopParent.transform);
     }
 }

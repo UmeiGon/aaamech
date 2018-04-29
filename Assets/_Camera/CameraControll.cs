@@ -3,30 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraControll : MonoBehaviour {
+    public float speed=105.0f;
     private void Start()
     {
-        StartCoroutine(CameraControllUpdate());
+        StartCoroutine(CameraControllRoutine());
     }
-    IEnumerator CameraControllUpdate()
+    IEnumerator CameraControllRoutine()
     {
-        float  speed = 105.0f;
         Vector3 _move=new Vector3(0,0,0);
         while (true)
         {
             _move = Vector3.zero;
-            if (Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.RightArrow)||Input.GetKey(KeyCode.D))
             {
                 _move = transform.right;
             }
-            if (Input.GetKey(KeyCode.LeftArrow))
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
             {
                 _move = -transform.right;
             }
-            if (Input.GetKey(KeyCode.UpArrow))
+            if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W))
             {
                 _move = transform.forward;
             }
-            if (Input.GetKey(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
             {
                 _move = -transform.forward;
             }

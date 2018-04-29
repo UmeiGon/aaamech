@@ -9,28 +9,28 @@ public class CanvasChanger : MonoBehaviour
     [SerializeField]
     List<Canvas> canvasList;
     Action<ChangeCanvasButton> changeTrigger;
+    List<ChangeCanvasButton> changeButtonList = new List<ChangeCanvasButton>();
     public void AddChangedCanvasTrigger(Action<ChangeCanvasButton> change_trigger)
     {
         changeTrigger += change_trigger;
     }
-    List<ChangeCanvasButton> cButtonList = new List<ChangeCanvasButton>();
     private void Start()
     {
-        if (cButtonList.Count > 0)
+        if (changeButtonList.Count > 0)
         {
-            if (cButtonList.Count > DefaultCanvasNum)
+            if (changeButtonList.Count > DefaultCanvasNum)
             {
-                ChangeCanvas(cButtonList[DefaultCanvasNum]);
+                ChangeCanvas(changeButtonList[DefaultCanvasNum]);
             }
             else
             {
-                ChangeCanvas(cButtonList[0]);
+                ChangeCanvas(changeButtonList[0]);
             }
         }
     }
     public void AddChangeCanvasButton(ChangeCanvasButton change_button)
     {
-        cButtonList.Add(change_button);
+        changeButtonList.Add(change_button);
     }
     public void ChangeCanvas(ChangeCanvasButton change_button)
     {
@@ -39,7 +39,7 @@ public class CanvasChanger : MonoBehaviour
     }
     void ActiveChange(ChangeCanvasButton change_button)
     {
-        foreach (var i in cButtonList)
+        foreach (var i in changeButtonList)
         {
             bool isActive = (change_button == i);
             i.SelectEffect.SetActive(isActive);

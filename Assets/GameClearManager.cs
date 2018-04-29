@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.UI;
 public class GameClearManager : MonoBehaviour
 {
-
-    public Unit ClearUnit;
+    Unit ClearUnit;
+    [SerializeField]
+    Canvas clearCanvas;
+    [SerializeField]
+    Text clearComment;
     private void Start()
     {
+        var obj=GameObject.Find("ClearUnit");
+        if(obj)ClearUnit = obj.GetComponent<Unit>();
         if (ClearUnit)
         {
             StartCoroutine(ClearCheckRoutine());
@@ -20,17 +25,33 @@ public class GameClearManager : MonoBehaviour
         {
             if (ClearUnit == null)
             {
-                Clear();
+                StartCoroutine(ClearRoutine());
             }
             yield return null;
         }
     }
+    IEnumerator ClearRoutine()
+    {
+        clearCanvas.gameObject.SetActive(true);
+        clearComment.text = "ゲームクリア";
+        yield return new WaitForSeconds(2.5f);
+        Clear();
+        yield return null;
+
+    }
     void Clear()
     {
-        SceneManager.LoadScene("ClearScene");
+        GoTitle();
     }
-    public void ResetButtonClick()
+    public void GoTitle()
     {
-        SceneManager.LoadScene("stage_1");
+        SceneManager.LoadScene("Title");
+    }
+    public void ResetStage()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name, LoadSceneMode.Single);
+
+        // 加算シーンの読み込み
+        SceneManager.LoadScene("CanvasAndManager", LoadSceneMode.Additive);
     }
 }

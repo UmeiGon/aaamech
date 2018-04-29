@@ -10,23 +10,23 @@ public class CommandEdge
     public EdgeChecker checker = null;
     public virtual bool Check() { return false; }
 
-    public void DeleteMe()
+    public void ReferenceRemoving()
     {
-        if (pre != null) pre.edges.Remove(this);
-        if (next != null) next.edges.Remove(this);
+        if (pre != null) pre.NextStreamEdges.Remove(this);
+        if (next != null) next.NextStreamEdges.Remove(this);
         pre = null;
         next = null;
     }
     //自分のpreかnextが自分(edge)を持っていなかった場合追加する。
     public void CommandAddMe()
     {
-        if (pre != null&& pre.edges.Find(x => x == this)==null)
+        if (pre != null&& pre.NextStreamEdges.Find(x => x == this)==null)
         {
-            pre.edges.Add(this);
+            pre.NextStreamEdges.Add(this);
         }
-        if (next != null && next.edges.Find(x => x == this) == null)
+        if (next != null && next.NextStreamEdges.Find(x => x == this) == null)
         {
-            next.edges.Add(this);
+            next.NextStreamEdges.Add(this);
         }
     }
     //追加に成功した場合真を返す
@@ -41,17 +41,17 @@ public class CommandEdge
         if (next != null)
         {
             //既に同じ関係性のedgeが無ければpreに
-            if (next.edges.Find(x => x.pre == c_node) == null)
+            if (next.NextStreamEdges.Find(x => x.pre == c_node) == null)
             {
                 pre = c_node;
-                c_node.edges.Add(this);
+                c_node.NextStreamEdges.Add(this);
                 return true;
             }
         }
         else
         {
             pre = c_node;
-            c_node.edges.Add(this);
+            c_node.NextStreamEdges.Add(this);
             return true;
         }
         return false;
@@ -68,15 +68,17 @@ public class CommandEdge
         if (pre != null)
         {
             //既に同じ関係性のedgeが無ければnextに
-            if (pre.edges.Find(x => x.next == c_node) == null)
+            if (pre.NextStreamEdges.Find(x => x.next == c_node) == null)
             {
                 next = c_node;
+                c_node.PreStreamEdges.Add(this);
                 return true;
             }
         }
         else
         {
             next = c_node;
+            c_node.PreStreamEdges.Add(this);
             return true;
         }
         return false;

@@ -4,26 +4,24 @@ using UnityEngine;
 using System;
 public class MechAITree
 {
-    public string treeName;
-    bool isActive=true;
-    public bool IsActive
+    bool uiIsActive=true;
+    public bool UIIsActive
     {
-        get { return isActive; }
+        get { return uiIsActive; }
         set
         {
-            isActive = value;
+            uiIsActive = value;
             foreach (var n in nodeList)
             {
-                n.holder.gameObject.SetActive(isActive);
+                if(n.holder) n.holder.gameObject.SetActive(uiIsActive);
             }
             foreach (var e in edgeList)
             {
-                e.holder.gameObject.SetActive(isActive);
+                if(e.holder)e.holder.gameObject.SetActive(uiIsActive);
             }
         }
     }
     public List<CommandNode> nodeList = new List<CommandNode>();
     public List<CommandEdge> edgeList = new List<CommandEdge>();
-    public Action firstChanged;
     public CommandNode firstNode;
 }

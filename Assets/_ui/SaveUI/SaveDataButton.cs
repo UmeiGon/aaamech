@@ -13,6 +13,11 @@ public class SaveDataButton : MonoBehaviour
     InputField nameInputField;
     [SerializeField]
     int buttonNum;
+    bool isSelected;
+    public bool IsSelected
+    {
+        get { return isSelected; }
+    }
     public Button UIButton
     {
         get { return button;}
@@ -43,10 +48,12 @@ public class SaveDataButton : MonoBehaviour
         anim.SetBool("IsSelect", true);
         nameInputField.enabled = true;
         nameInputField.ActivateInputField();
+        isSelected = true;
     }
     public void UnSelectTrigger()
     {
         anim.SetBool("IsSelect", false);
         nameInputField.enabled = false;
+        isSelected = false;
     }
 }

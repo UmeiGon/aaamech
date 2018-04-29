@@ -10,7 +10,6 @@ public abstract class  Unit : MonoBehaviour
     private float helth;
     private Action deathActions;
     private Action<Unit> ReceivedDamageAction;
-    public GameObject selectEffect;
     public float maxHelth;
     public ItemID itemid = 0;
     public int itemValue = 0;
@@ -35,6 +34,7 @@ public abstract class  Unit : MonoBehaviour
         }
         get { return helth; }
     }
+   
     public void AddReceivedDamageAction(Action<Unit> received_acition)
     {
         ReceivedDamageAction += received_acition;

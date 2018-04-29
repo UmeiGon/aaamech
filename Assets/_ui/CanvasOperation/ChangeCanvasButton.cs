@@ -6,6 +6,10 @@ using System;
 public class ChangeCanvasButton : MonoBehaviour {
     [SerializeField]
     Button button;
+    public Button UIButton
+    {
+        get { return button; }
+    }
     [SerializeField]
     GameObject selectEffect;
     public GameObject SelectEffect

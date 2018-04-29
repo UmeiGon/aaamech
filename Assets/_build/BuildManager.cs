@@ -8,7 +8,7 @@ using System.Linq;
 public class BuildManager : MonoBehaviour
 { 
     ItemManager itemManager;
-    IEnumerator nowBuildRoutine;
+    IEnumerator currentBuildRoutine;
     GameObject buildUnitObj;
     private void Start()
     {
@@ -29,14 +29,14 @@ public class BuildManager : MonoBehaviour
     public void BuildStart(BuildID build_id)
     {
         CancelBuild();
-        nowBuildRoutine = BuildRoutine(build_id);
-        StartCoroutine(nowBuildRoutine);
+        currentBuildRoutine = BuildRoutine(build_id);
+        StartCoroutine(currentBuildRoutine);
     }
     public void CancelBuild()
     {
-        if (nowBuildRoutine != null) StopCoroutine(nowBuildRoutine);
+        if (currentBuildRoutine != null) StopCoroutine(currentBuildRoutine);
         Destroy(buildUnitObj);
-        nowBuildRoutine = null;
+        currentBuildRoutine = null;
     }
     IEnumerator BuildRoutine(BuildID build_id)
     {

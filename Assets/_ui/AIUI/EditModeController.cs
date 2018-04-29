@@ -17,6 +17,8 @@ public class EditModeController : MonoBehaviour {
     {
         if (!editButton) return;
         bool isEditMode = (editButton == _button);
+        aITreeGenerator.SelectEdge = null;
+        aITreeGenerator.SelectNode = null;
         aITreeGenerator.CanEdit = isEditMode;
     }
 }

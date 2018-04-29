@@ -3,5 +3,5 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameNumbers : MonoBehaviour {
-    public int maxSaveValue;
+    //public int maxSaveValue;
 }
