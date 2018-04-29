@@ -13,19 +13,11 @@ public class BaseSelector : MonoBehaviour {
     {
         while (true)
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            BaseUnit baseUnit;
+            if ((baseUnit = RightClickRayShot.GetMouseRayHitObject<BaseUnit>(KeyCode.Mouse0)) != null)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if (Physics.Raycast(ray, out hit, 1000.0f))
-                {
-                    BaseUnit baseUnit = hit.transform.GetComponent<BaseUnit>();
-                    if (baseUnit)
-                    {
-
-                        mechGenerator.SelectBase = baseUnit;
-                    }
-                }
+                Debug.Log(baseUnit);
+                mechGenerator.SelectBase = baseUnit;
             }
             yield return null;
         }   

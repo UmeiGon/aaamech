@@ -20,7 +20,7 @@ public class MechGenerator : MonoBehaviour
                 selectBase.SelectEffectIsActive = false;
             }
             selectBase = value;
-            selectBase.SelectEffectIsActive = true;
+            if(selectBase)selectBase.SelectEffectIsActive = true;
         }
     }
     ItemManager itemManager;

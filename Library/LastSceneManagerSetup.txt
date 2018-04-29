@@ -1,4 +1,7 @@
 sceneSetups:
-- path: Assets/_scene/Title.unity
+- path: Assets/_scene/stage_1.unity
   isLoaded: 1
   isActive: 1
+- path: Assets/_scene/CanvasAndManager.unity
+  isLoaded: 1
+  isActive: 0

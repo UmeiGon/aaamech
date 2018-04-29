@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField]
     ParticleSystem attackEffect;
     Unit targetUnit;
-    Vector3? startPos=null;
+    Vector3? startPos = null;
     enum EnemyActivity
     {
         ChaseTarget,
@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
     {
         if (activity == EnemyActivity.AttackTarget)
         {
-           
+
         }
         switch (next_activity)
         {
@@ -75,10 +75,10 @@ public class EnemyController : MonoBehaviour
     }
     void Move()
     {
-        if(startPos==null)startPos = transform.position;
+        if (startPos == null) startPos = transform.position;
 
         //targetUnitがいない場合帰る
-        if (!targetUnit &&( activity != EnemyActivity.ReturnToBase && activity != EnemyActivity.IdleOnBase))
+        if (!targetUnit && (activity != EnemyActivity.ReturnToBase && activity != EnemyActivity.IdleOnBase))
         {
             ChangeActivity(EnemyActivity.ReturnToBase);
         }
@@ -139,6 +139,8 @@ public class EnemyController : MonoBehaviour
     {
         Gizmos.color = new Color(0, 255, 0, 0.2f);
         Gizmos.DrawSphere(transform.position, sensorRange);
+        Gizmos.color = Color.yellow - new Color(0, 0, 0, 0.8f);
+        Gizmos.DrawSphere(transform.position, chaseMaxRange);
     }
     void TargetSelect()
     {
